@@ -12,8 +12,6 @@ export const profile = {
   github: 'https://github.com/Coder-Anindita',
   linkedin: 'https://www.linkedin.com/in/anindita-chakraborty-dev',
   leetcode: 'https://leetcode.com/coderanindita',
-  // Put your CV at frontend/public/resume.pdf (replace the placeholder file).
-  resume: '/resume.pdf',
   // Optional: put a photo at frontend/public/images/profile/ and set the path, or leave empty.
   avatar: '',
   // Shows an "Open to opportunities" badge in the hero. Set to false to hide it.

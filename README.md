@@ -27,7 +27,7 @@ My personal portfolio and technical blog. It covers my education, experience, sk
 ```
 .
 ├── frontend/                 # React + Vite site
-│   ├── public/               # Static files (images, resume, OG image)
+│   ├── public/               # Static files (images, OG image)
 │   ├── plugins/blog-meta.js  # Vite plugin that loads post metadata for listings
 │   └── src/
 │       ├── components/       # Layout, sections, blog, MDX and UI components

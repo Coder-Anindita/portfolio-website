@@ -1,4 +1,4 @@
-import { ArrowRight, FileText, Mail, MapPin } from 'lucide-react'
+import { ArrowRight, Mail, MapPin } from 'lucide-react'
 import { profile } from '../../data/profile.js'
 import { socials } from '../../lib/socials.js'
 import SectionLink from '../layout/SectionLink.jsx'
@@ -30,11 +30,7 @@ export default function Hero() {
           </p>
 
           <div className="rise mt-9 flex flex-wrap gap-3" style={{ '--rise-delay': '260ms' }}>
-            <Button href={profile.resume} target="_blank" rel="noopener noreferrer">
-              <FileText size={16} aria-hidden="true" />
-              View Resume
-            </Button>
-            <Button href={`mailto:${profile.email}`} variant="secondary">
+            <Button href={`mailto:${profile.email}`}>
               <Mail size={16} aria-hidden="true" />
               Email Me
             </Button>

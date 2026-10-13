@@ -1,4 +1,3 @@
-import { FileText } from 'lucide-react'
 import { navLinks } from '../../data/navigation.js'
 import { profile } from '../../data/profile.js'
 import { socials } from '../../lib/socials.js'
@@ -42,18 +41,6 @@ export default function Footer() {
                 </a>
               </li>
             ))}
-            <li>
-              <a
-                href={profile.resume}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Resume"
-                title="Resume / CV"
-                className="grid size-9 place-items-center rounded-full text-muted transition-all duration-200 hover:-translate-y-0.5 hover:bg-zinc-100 hover:text-ink"
-              >
-                <FileText size={17} aria-hidden="true" />
-              </a>
-            </li>
           </ul>
         </div>
 

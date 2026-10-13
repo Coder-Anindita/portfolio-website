@@ -1,4 +1,4 @@
-import { FileText, Menu, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { navLinks } from '../../data/navigation.js'
@@ -74,15 +74,6 @@ export default function Navbar() {
         </ul>
 
         <div className="flex items-center gap-2">
-          <a
-            href={profile.resume}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden items-center gap-1.5 rounded-full border border-line bg-white px-4 py-1.5 text-sm font-medium text-ink transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-sm sm:inline-flex"
-          >
-            <FileText size={15} aria-hidden="true" />
-            Resume
-          </a>
           <button
             type="button"
             className="grid size-10 place-items-center rounded-full text-ink transition-colors hover:bg-zinc-100 lg:hidden"
@@ -117,17 +108,6 @@ export default function Navbar() {
               </SectionLink>
             </li>
           ))}
-          <li className="mt-2 sm:hidden">
-            <a
-              href={profile.resume}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-xl bg-ink px-4 py-3 text-base font-medium text-white"
-            >
-              <FileText size={17} aria-hidden="true" />
-              View Resume
-            </a>
-          </li>
         </ul>
       </div>
     </header>

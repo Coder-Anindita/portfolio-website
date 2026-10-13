@@ -16,14 +16,13 @@ Everything personal lives in `src/data/`. No component changes needed.
 
 | What | File |
 | --- | --- |
-| Name, role, email, social links, resume, hero text | `src/data/profile.js` |
+| Name, role, email, social links, hero text | `src/data/profile.js` |
 | About text and highlights | `src/data/profile.js` (`about`) |
 | Education | `src/data/education.js` |
 | Experience | `src/data/experience.js` |
 | Skills | `src/data/skills.js` |
 | Projects | `src/data/projects.js` (images in `public/images/projects/`) |
 | Page titles/descriptions (SEO) | `src/data/seo.js` |
-| Resume | replace `public/resume.pdf` |
 
 Search for `YOUR_` to find every placeholder.
 
