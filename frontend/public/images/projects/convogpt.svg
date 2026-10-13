@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f0fdfa"/>
+      <stop offset="1" stop-color="#e0f2fe"/>
+    </linearGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.6" fill="#cbd5e1" opacity="0.6"/>
+    </pattern>
+    <linearGradient id="sweater" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fb923c"/>
+      <stop offset="1" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="robotBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#5eead4" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#5eead4" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <rect width="1600" height="1000" fill="url(#dots)"/>
+  <circle cx="300" cy="560" r="300" fill="#fed7aa" opacity="0.45"/>
+  <circle cx="1270" cy="520" r="320" fill="#99f6e4" opacity="0.45"/>
+
+  <!-- Title pill -->
+  <g filter="url(#shadow)">
+    <rect x="660" y="70" width="280" height="68" rx="34" fill="#ffffff"/>
+  </g>
+  <circle cx="706" cy="104" r="14" fill="#14b8a6"/>
+  <text x="732" y="116" font-size="34" font-weight="700" fill="#0f172a">ConvoGPT</text>
+
+  <!-- ===== Person ===== -->
+  <g>
+    <!-- hair (back) -->
+    <path d="M262 470 C250 340 330 300 395 300 C470 300 535 345 525 470 L535 650 Q535 690 495 690 L295 690 Q255 690 258 650 Z" fill="#3b2418"/>
+    <!-- body -->
+    <path d="M150 1000 C150 800 230 700 395 700 C560 700 640 800 640 1000 Z" fill="url(#sweater)"/>
+    <path d="M345 700 L395 770 L445 700 Z" fill="#f8c9a8"/>
+    <!-- neck -->
+    <rect x="360" y="600" width="70" height="110" rx="30" fill="#eab894"/>
+    <!-- head -->
+    <ellipse cx="395" cy="480" rx="112" ry="130" fill="#f8c9a8"/>
+    <!-- fringe -->
+    <path d="M283 470 C285 370 340 340 400 340 C470 340 512 380 508 470 C470 420 420 400 360 410 C320 418 300 440 283 470 Z" fill="#3b2418"/>
+    <!-- ears -->
+    <ellipse cx="285" cy="495" rx="16" ry="24" fill="#eab894"/>
+    <ellipse cx="505" cy="495" rx="16" ry="24" fill="#eab894"/>
+    <circle cx="285" cy="525" r="6" fill="#14b8a6"/>
+    <!-- face -->
+    <path d="M335 470 Q352 458 369 470" stroke="#3b2418" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M425 470 Q442 458 459 470" stroke="#3b2418" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <circle cx="352" cy="492" r="9" fill="#1e293b"/>
+    <circle cx="442" cy="492" r="9" fill="#1e293b"/>
+    <ellipse cx="330" cy="530" rx="18" ry="10" fill="#fb7185" opacity="0.35"/>
+    <ellipse cx="464" cy="530" rx="18" ry="10" fill="#fb7185" opacity="0.35"/>
+    <path d="M365 548 Q397 575 429 548" stroke="#9a3412" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <!-- hand holding phone -->
+    <rect x="470" y="770" width="78" height="130" rx="14" fill="#1e293b" transform="rotate(-12 509 835)"/>
+    <rect x="480" y="784" width="58" height="96" rx="8" fill="#5eead4" transform="rotate(-12 509 835)"/>
+    <ellipse cx="500" cy="880" rx="48" ry="36" fill="#f8c9a8"/>
+  </g>
+
+  <!-- ===== Robot ===== -->
+  <g>
+    <!-- antenna -->
+    <line x1="1240" y1="250" x2="1240" y2="320" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="1240" cy="240" r="40" fill="url(#glow)"/>
+    <circle cx="1240" cy="240" r="18" fill="#14b8a6"/>
+    <!-- head -->
+    <g filter="url(#shadow)">
+      <rect x="1090" y="315" width="300" height="240" rx="60" fill="url(#robotBody)"/>
+    </g>
+    <rect x="1070" y="400" width="30" height="80" rx="15" fill="#14b8a6"/>
+    <rect x="1380" y="400" width="30" height="80" rx="15" fill="#14b8a6"/>
+    <!-- screen face -->
+    <rect x="1125" y="355" width="230" height="160" rx="40" fill="#134e4a"/>
+    <ellipse cx="1190" cy="425" rx="20" ry="26" fill="#5eead4"/>
+    <ellipse cx="1290" cy="425" rx="20" ry="26" fill="#5eead4"/>
+    <circle cx="1196" cy="416" r="6" fill="#ffffff"/>
+    <circle cx="1296" cy="416" r="6" fill="#ffffff"/>
+    <path d="M1205 470 Q1240 495 1275 470" stroke="#5eead4" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <!-- neck -->
+    <rect x="1210" y="550" width="60" height="50" fill="#94a3b8"/>
+    <!-- body -->
+    <g filter="url(#shadow)">
+      <path d="M1040 1000 L1040 690 C1040 630 1090 595 1150 595 L1330 595 C1390 595 1440 630 1440 690 L1440 1000 Z" fill="url(#robotBody)"/>
+    </g>
+    <rect x="1165" y="680" width="150" height="100" rx="22" fill="#134e4a"/>
+    <circle cx="1205" cy="730" r="12" fill="#5eead4"/>
+    <circle cx="1240" cy="730" r="12" fill="#fb923c"/>
+    <circle cx="1275" cy="730" r="12" fill="#5eead4"/>
+    <!-- waving arm -->
+    <path d="M1430 680 C1490 650 1510 590 1500 530" stroke="#cbd5e1" stroke-width="34" fill="none" stroke-linecap="round"/>
+    <circle cx="1500" cy="510" r="34" fill="#14b8a6"/>
+    <!-- other arm -->
+    <path d="M1050 690 C1000 740 990 800 1000 860" stroke="#cbd5e1" stroke-width="34" fill="none" stroke-linecap="round"/>
+    <circle cx="1002" cy="878" r="32" fill="#14b8a6"/>
+  </g>
+
+  <!-- ===== Chat bubbles ===== -->
+  <!-- user message -->
+  <g filter="url(#shadow)">
+    <path d="M590 230 h400 a28 28 0 0 1 28 28 v84 a28 28 0 0 1 -28 28 h-372 l-46 34 l10 -40 a28 28 0 0 1 -20 -22 v-84 a28 28 0 0 1 28 -28 z" fill="#ffffff"/>
+  </g>
+  <text x="614" y="290" font-size="30" font-weight="500" fill="#0f172a">Can you explain WebRTC</text>
+  <text x="614" y="334" font-size="30" font-weight="500" fill="#0f172a">in simple words?</text>
+
+  <!-- bot reply -->
+  <g filter="url(#shadow)">
+    <path d="M612 430 h420 a28 28 0 0 1 28 28 v130 a28 28 0 0 1 -18 26 l14 44 l-54 -42 h-390 a28 28 0 0 1 -28 -28 v-130 a28 28 0 0 1 28 -28 z" fill="#0d9488"/>
+  </g>
+  <text x="640" y="494" font-size="30" font-weight="500" fill="#ffffff">Sure! It lets two browsers</text>
+  <text x="640" y="538" font-size="30" font-weight="500" fill="#ffffff">share video and audio</text>
+  <text x="640" y="582" font-size="30" font-weight="500" fill="#ffffff">directly — peer to peer.</text>
+
+  <!-- typing indicator -->
+  <g filter="url(#shadow)">
+    <rect x="590" y="700" width="150" height="76" rx="38" fill="#ffffff"/>
+  </g>
+  <circle cx="630" cy="738" r="10" fill="#94a3b8"/>
+  <circle cx="665" cy="738" r="10" fill="#cbd5e1"/>
+  <circle cx="700" cy="738" r="10" fill="#e2e8f0"/>
+
+  <!-- sparkles -->
+  <path d="M1460 300 l10 24 l24 10 l-24 10 l-10 24 l-10 -24 l-24 -10 l24 -10 z" fill="#14b8a6" opacity="0.8"/>
+  <path d="M180 260 l7 16 l16 7 l-16 7 l-7 16 l-7 -16 l-16 -7 l16 -7 z" fill="#fb923c" opacity="0.8"/>
+  <path d="M960 820 l7 16 l16 7 l-16 7 l-7 16 l-7 -16 l-16 -7 l16 -7 z" fill="#14b8a6" opacity="0.6"/>
+</svg>

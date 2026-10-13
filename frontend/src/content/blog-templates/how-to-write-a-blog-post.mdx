@@ -1,0 +1,136 @@
+---
+title: "How to Write a Blog Post on This Site"
+description: "A reference post showing every formatting feature this blog supports — headings, code blocks with syntax highlighting, tables, callouts, images and video."
+date: "2026-10-04"
+image: "/images/blog/writing-guide.svg"
+tags:
+  - Guide
+  - MDX
+  - Web Development
+---
+
+This post doubles as a **template** and a **style guide**. Copy this file, rename it, change the frontmatter, and start writing — the new article appears on the Blogs page automatically.
+
+## Creating a new post
+
+1. Create a file in `frontend/src/content/blogs/`, for example `my-new-post.mdx`.
+2. Add frontmatter at the top (title, description, date, image, tags).
+3. Write the article in Markdown or MDX.
+4. Put images in `frontend/public/images/blog/` and reference them as `/images/blog/your-image.png`.
+
+The file name becomes the URL, so `my-new-post.mdx` is served at `/blogs/my-new-post`.
+
+<Callout type="tip">
+  Add `draft: true` to the frontmatter to keep a post visible locally but hidden from the production build.
+</Callout>
+
+## Text formatting
+
+You can write **bold text**, *italic text*, <u>underlined text</u>, ~~strikethrough~~, `inline code`, and [links to other sites](https://react.dev).
+
+> Blockquotes are useful for quoting documentation or highlighting a key idea.
+> They can span multiple lines.
+
+### Lists
+
+- Unordered lists use a dash
+- Nested items work too
+  - Like this one
+- Task lists from GitHub-flavoured Markdown:
+
+- [x] Write the draft
+- [ ] Add screenshots
+
+## Code blocks
+
+Fenced code blocks are highlighted at build time, so readers download zero highlighting JavaScript. Hover a block to copy it.
+
+```javascript
+// Fetch a list of users and return their names
+async function getUserNames() {
+  const response = await fetch('/api/users')
+  if (!response.ok) throw new Error('Request failed')
+  const users = await response.json()
+  return users.map((user) => user.name)
+}
+```
+
+Add a title and highlight specific lines with `title="..."` and `{line numbers}`:
+
+```js title="server.js" {4-6}
+import express from 'express'
+
+const app = express()
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' })
+})
+
+app.listen(5000)
+```
+
+Line numbers are available with `showLineNumbers`:
+
+```cpp showLineNumbers
+#include <iostream>
+using namespace std;
+
+int main() {
+  cout << "Hello, world!" << endl;
+  return 0;
+}
+```
+
+Shell commands, JSON, SQL and many other languages work out of the box:
+
+```bash
+npm install
+npm run dev
+```
+
+```sql
+SELECT name, email
+FROM users
+WHERE created_at > NOW() - INTERVAL '7 days'
+ORDER BY created_at DESC;
+```
+
+## Tables
+
+| Feature | Syntax | Notes |
+| --- | --- | --- |
+| Bold | `**text**` | Strong emphasis |
+| Italic | `*text*` | Light emphasis |
+| Code | `` `code` `` | Inline code |
+| Underline | `<u>text</u>` | Use sparingly |
+
+## Callouts
+
+<Callout type="info">
+  Use callouts to highlight side notes.
+</Callout>
+
+<Callout type="warning" title="Heads up">
+  Warnings draw attention to common mistakes.
+</Callout>
+
+<Callout type="danger">
+  Use this for things that can break production.
+</Callout>
+
+## Images and GIFs
+
+Markdown images work for PNG, JPG, SVG and GIF files. The optional text in quotes becomes a caption:
+
+![A diagram of a frontend talking to an API and a database](/images/blog/full-stack-diagram.svg "Frontend → API → Database")
+
+## Video
+
+Embed a YouTube video with its ID:
+
+<YouTube id="SqcY0GlETPk" title="React tutorial for beginners" />
+
+Or a self-hosted video file with `<Video src="/images/blog/demo.mp4" caption="Demo" />`.
+
+---
+
+That's everything. Happy writing!

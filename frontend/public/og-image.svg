@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630"><rect width="100%" height="100%" fill="#fbfbfa"/><defs><pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern></defs><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="100" y="270" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="76" font-weight="600" fill="#18181b">Anindita Chakraborty</text>
+<text x="100" y="350" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="40" font-weight="500" fill="#0f766e">Full Stack Developer</text>
+<text x="100" y="420" font-family="JetBrains Mono, Consolas, monospace" font-size="24" fill="#71717a">Portfolio · Technical Blog</text></svg>

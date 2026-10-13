@@ -1,0 +1,77 @@
+---
+title: "Understanding React Hooks: useState and useEffect"
+description: "A practical introduction to the two hooks you'll use in almost every React component — what they do, when they run, and the mistakes to avoid."
+date: "2026-09-20"
+image: "/images/blog/react-hooks.svg"
+tags:
+  - React
+  - JavaScript
+---
+
+Hooks let function components hold state and react to changes. Two of them — `useState` and `useEffect` — cover most of what everyday components need.
+
+## useState: remembering values
+
+`useState` returns the current value and a function to update it. Calling the setter schedules a re-render with the new value.
+
+```jsx title="Counter.jsx"
+import { useState } from 'react'
+
+export default function Counter() {
+  const [count, setCount] = useState(0)
+
+  return (
+    <button onClick={() => setCount((c) => c + 1)}>
+      Clicked {count} times
+    </button>
+  )
+}
+```
+
+<Callout type="tip">
+  When the next value depends on the previous one, pass a function to the setter: `setCount((c) => c + 1)`. It always receives the latest state.
+</Callout>
+
+## useEffect: syncing with the outside world
+
+Effects run **after** React updates the screen. Use them to sync with things outside React — network requests, subscriptions, timers or the DOM.
+
+```jsx {4-10}
+import { useEffect, useState } from 'react'
+
+function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth)
+
+  useEffect(() => {
+    const onResize = () => setWidth(window.innerWidth)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
+  return width
+}
+```
+
+The function returned from an effect is the **cleanup**. React calls it before the effect runs again and when the component unmounts.
+
+### The dependency array
+
+| Dependency array | When the effect runs |
+| --- | --- |
+| *omitted* | After every render |
+| `[]` | Once, after the first render |
+| `[userId]` | After the first render and whenever `userId` changes |
+
+## Common mistakes
+
+- **Missing dependencies.** If the effect reads a value, list it in the array, or it will use a stale value.
+- **Effects for derived data.** If a value can be calculated from props or state during render, calculate it — no effect needed.
+- **Forgetting cleanup.** Subscriptions and timers that are never cleaned up cause memory leaks.
+
+<Callout type="warning">
+  In development, React's Strict Mode runs effects twice on mount to help you find missing cleanups. That's expected.
+</Callout>
+
+## Summary
+
+`useState` stores values between renders; `useEffect` keeps your component in sync with systems outside React. Keep effects small, list their dependencies honestly, and always clean up after yourself.
