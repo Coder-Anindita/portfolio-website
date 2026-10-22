@@ -1,6 +1,6 @@
 ---
 title: "ACID Properties Explained: Why Your ₹1000 Never Vanishes Mid-Transfer"
-description: "Atomicity, Consistency, Isolation and Durability, explained with bank transfers, iPhone flash sales, real WAL logs and a few Bollywood dialogues. Everything you need for your next database interview."
+description: "Atomicity, Consistency, Isolation and Durability, explained simply with bank transfers, flash sales and real database logs. Everything you need for your next database interview."
 date: "2026-10-23"
 image: "/images/blog/acid-cover.svg"
 tags:
@@ -10,606 +10,415 @@ tags:
   - Interview Prep
 ---
 
-You open your UPI app and send ₹1000 to your friend. The app shows a spinner for a second, then a green tick.
+You send ₹1000 to a friend on UPI. Now imagine the bank's server crashes **exactly halfway** through. Your account was debited, but your friend's was never credited. Where did the money go?
 
-Now imagine the bank's server crashed **exactly halfway** through that second. Your account was debited, but your friend's account was never credited. Where did the ₹1000 go?
-
-In the real world, this (almost) never happens. The reason is four letters that show up in every backend interview: **ACID**.
-
-Let's understand them properly, with diagrams, real database logs, and some help from Bollywood.
+In real life this (almost) never happens, thanks to four letters that come up in every backend interview: **ACID**. Let's understand them in simple words.
 
 ![ACID: Atomicity, Consistency, Isolation, Durability](/images/blog/acid-cover.svg)
 
 ## The ₹1000 problem 🏦
 
-A transfer from account **A** to account **B** is really two separate operations:
+A transfer from account **A** to account **B** is really two steps:
 
 1. Subtract ₹1000 from A.
 2. Add ₹1000 to B.
 
-Now watch what happens if the server crashes between step 1 and step 2:
+If the server crashes between them:
 
 ![Animated: A is debited, the server crashes, B is never credited](/images/blog/acid-bank-crash.svg "Two updates, one crash, ₹1000 gone.")
 
-A lost ₹1000. B never got it. The bank's total money went from ₹7,000 to ₹6,000. Nobody stole it. It just fell into the gap between two statements.
-
-![Meme: money debited but not credited, "Ye dukh kaahe khatam nahi hota be!"](/images/blog/acid-meme-wasseypur.svg "We've all had a mini heart attack over a pending UPI payment.")
-
-We need a way to tell the database: *"These two steps belong together. Do both, or do neither."*
-
-That's exactly what a **transaction** is.
+A lost ₹1000 and B never got it. We need a way to tell the database: *"These two steps belong together. Do both, or neither."* That's a **transaction**.
 
 ## What is a transaction?
 
-> **A transaction is a group of database operations that is treated as one single unit of work. Either all of them succeed, or none of them take effect.**
+> **A transaction is a group of database operations treated as one unit. Either all of them succeed, or none of them take effect.**
 
-That's the interview-ready one-liner. If you want an even simpler version: a transaction is a **"package deal"** for your queries.
-
-Real-life examples:
+Think of it as a **package deal** for your queries. Examples:
 
 - 💸 **Bank transfer:** debit one account + credit another.
 - 🛒 **Placing an order:** create the order + reduce stock + record the payment.
-- 🎫 **Booking a train seat:** mark the seat as taken + create the ticket.
 
-In each case, doing only *half* the work leaves the data in a broken state.
+Doing only half of any of these leaves the data broken.
 
 ### Transactions in SQL
 
-Here's our transfer, written properly:
-
 ```sql title="transfer.sql"
-BEGIN;                                                    -- start the package
-
+BEGIN;
 UPDATE accounts SET balance = balance - 1000 WHERE id = 'A';
 UPDATE accounts SET balance = balance + 1000 WHERE id = 'B';
-
-COMMIT;                                                   -- make it permanent
+COMMIT;
 ```
 
 | Command | What it does |
 | --- | --- |
-| `BEGIN` (or `START TRANSACTION`) | Opens a transaction. Everything after this is part of one unit. |
-| `COMMIT` | "I'm done, save everything." All changes become permanent and visible to others. |
-| `ROLLBACK` | "Cancel everything." All changes since `BEGIN` are thrown away. |
-| `SAVEPOINT name` | A checkpoint *inside* a transaction you can roll back to, without cancelling everything. |
+| `BEGIN` | Starts the transaction. |
+| `COMMIT` | Saves everything permanently and makes it visible to others. |
+| `ROLLBACK` | Cancels everything since `BEGIN`. |
 
-And if something goes wrong halfway, you (or your code) can bail out:
+If something goes wrong halfway, you cancel:
 
 ```sql
 BEGIN;
 UPDATE accounts SET balance = balance - 1000 WHERE id = 'A';
--- oops: B's account is frozen
-ROLLBACK;   -- A gets its ₹1000 back, as if nothing happened
+-- B's account is frozen, so stop
+ROLLBACK;   -- A gets its ₹1000 back
 ```
 
+Every transaction follows the same path and ends in one of two places:
+
+![Flowchart: Active, then Partially committed and Committed, or Failed and Aborted](/images/blog/acid-transaction-states.svg)
+
 <Callout type="info" title="Autocommit">
-  If you run a single `UPDATE` without `BEGIN`, most databases quietly wrap it in its own mini transaction and commit it immediately. This is called **autocommit** mode. That's why one statement is always safe, but two separate statements are not.
+  A single statement without `BEGIN` runs as its own tiny transaction and commits immediately. That's why one statement is always safe, but two separate statements are not.
 </Callout>
 
 ## So what exactly is ACID?
 
-Transactions are the tool. **ACID** is the set of guarantees that tool comes with.
-
-ACID is a set of **four properties** that a database promises about every transaction:
+Transactions are the tool. **ACID** is the set of four promises the database makes about every transaction:
 
 ![The four ACID properties applied to a bank transfer](/images/blog/acid-overview.svg)
 
-People often ask: **is ACID a rule, a setting, or just how databases behave by default?** Here's the honest answer:
+**Is ACID a rule, a setting, or default behaviour?**
 
-- **It's a set of guarantees (a contract), not a feature you switch on.** A database is called "ACID-compliant" if its transaction engine provides these four guarantees.
-- **It's not a SQL command.** You don't write `ENABLE ACID;`. You use transactions (`BEGIN … COMMIT`), and the engine keeps the promises.
-- **Relational databases like PostgreSQL, MySQL (InnoDB), Oracle and SQL Server provide it by default.** But how strictly they keep the "I" promise depends on the **isolation level**, which you *can* configure. More on that soon.
-- **Not every database is ACID.** MySQL's old MyISAM engine had no transactions at all. Many NoSQL databases historically traded some ACID guarantees for speed and scale. MongoDB has supported multi-document ACID transactions since version 4.0.
+- It's a set of **guarantees**, not a feature you switch on. There's no `ENABLE ACID;` command. You use transactions, and the database keeps the promises.
+- PostgreSQL, MySQL (InnoDB), Oracle and SQL Server provide it **by default**. The one part you can tune is how strict isolation is (more on that below).
 
-Each letter is handled by different machinery inside the database. Let's open the hood, one letter at a time.
+Let's go through each letter.
 
 ## 1. Atomicity: all or nothing ⚛️
 
-> **Atomicity means a transaction is indivisible. Either every operation in it is applied, or none of them are.**
+> **Atomicity means a transaction can't be split. Either every step is applied, or none are.**
 
-The word comes from "atom", which was once thought to be the smallest thing that can't be split. A transaction can't be split either: there is no "half done".
-
-Back to our transfer. With atomicity, there are only two possible endings:
+With atomicity, our transfer has only two possible endings:
 
 ![Animated: happy path commits both updates; crash path rolls everything back](/images/blog/acid-atomicity.svg "Both endings keep the total at ₹7,000.")
 
-Notice that atomicity doesn't prevent the crash. Servers will crash. Atomicity guarantees that **a crash can't leave you in the middle.** After recovery, the transfer either fully happened or never happened.
+Atomicity doesn't stop crashes. It guarantees that **a crash can't leave you halfway.** After recovery, the transfer either fully happened or never happened.
 
-![Meme: developer panics at the crash, the database calmly rolls back](/images/blog/acid-meme-ddlj.svg "The database has seen worse. Much worse.")
+### How databases achieve atomicity
 
-### Another quick example
+The database must be able to undo unfinished work, even after a power cut wipes its memory. The trick: **write everything down before doing it.**
 
-You place an order on an e-commerce site. The transaction does three things:
+#### Transaction log and WAL
 
-```sql
-BEGIN;
-INSERT INTO orders (id, user_id, total) VALUES (501, 42, 79999);
-UPDATE products SET stock = stock - 1 WHERE id = 'iphone-17';
-INSERT INTO payments (order_id, status) VALUES (501, 'captured');
-COMMIT;
-```
+The **transaction log** is the database's diary. Before changing any data, it writes a note: *"tx 735: change A from 5000 to 4000."*
 
-If the payment insert fails (say, the card is declined), atomicity makes sure you don't end up with an order that has no payment and a phone missing from stock. All three rows vanish together.
+The rule is called **Write-Ahead Logging (WAL)**:
 
-### How do databases actually achieve atomicity?
+> **The log entry for a change must be saved to disk *before* the change itself is written to the data files.**
 
-The database has to be able to **undo** anything that didn't finish, even after a power cut wipes out its memory. It does this by **writing everything down before doing it**. Three ideas work together here: transaction logs (WAL), rollback, and undo/redo logs.
+Why write the diary first?
 
-#### Transaction logs and WAL (Write-Ahead Logging)
+1. **It's fast.** The log is append-only: always write at the end of one file. Updating the real table means jumping around the disk, which is slow.
+2. **It's enough to recover.** If the diary is safe, everything else can be rebuilt from it.
 
-Think of a **transaction log** as the database's diary. Before the database changes anything, it first writes a note in the diary: *"tx 735: changing A from 5000 to 4000."*
+![Animated: change in RAM, append WAL and fsync, return COMMIT OK, checkpoint later](/images/blog/acid-wal-flow.svg "Log first, data later.")
 
-The golden rule is called **Write-Ahead Logging (WAL)**:
+1. The change is made in **memory**.
+2. A log entry is **written to the WAL on disk** and forced to disk (`fsync`).
+3. The database replies **"COMMIT OK"**.
+4. Later, a **checkpoint** copies the changed data to the real data files.
 
-> **The log record describing a change must reach disk *before* the change itself is written to the data files.**
+If the server dies after step 3, nothing is lost: on restart the database replays the WAL.
 
-Why the diary first? Two reasons:
+#### What a real transaction log looks like
 
-1. **The diary is fast to write.** It's append-only: you always write at the end of a file, which disks love. Updating the actual table means jumping around to random places on disk, which is slow.
-2. **The diary is enough to recover.** If the diary is safe, the database can rebuild everything else from it.
-
-Here's the flow for a single commit:
-
-![Animated: change in RAM, append WAL and fsync, return COMMIT OK, checkpoint later](/images/blog/acid-wal-flow.svg "Log first, data later. That's the whole trick.")
-
-1. The change is made to the table's page **in memory** (the buffer pool). It's now "dirty".
-2. A log record is **appended to the WAL file on disk** and flushed (`fsync`).
-3. Only now does the database tell you **"COMMIT OK"**.
-4. Later, in the background, a **checkpoint** writes the dirty pages to the real data files.
-
-If the server dies after step 3 but before step 4, nothing is lost. On restart, the database reads the WAL and replays it.
-
-#### What does a real transaction log look like?
-
-PostgreSQL stores its WAL in the `pg_wal/` folder as binary files, and ships a tool called `pg_waldump` that prints them in human-readable form. Here's what it prints for our transfer (tx 735) and a second transaction that got rolled back (tx 736):
+PostgreSQL keeps its WAL in the `pg_wal/` folder, and the `pg_waldump` tool prints it in readable form. Here's our transfer (tx 735) and a second transaction that was cancelled (tx 736):
 
 ![pg_waldump output showing two updates and a COMMIT for tx 735, and an ABORT for tx 736](/images/blog/acid-real-wal-log.svg "Output format of PostgreSQL's pg_waldump, recreated for readability.")
 
-How to read it:
-
-- **`rmgr`** (resource manager) says which part of the database wrote the record. `Heap` means table rows; `Transaction` means commit/abort bookkeeping.
-- **`tx`** is the transaction ID. Both updates belong to **tx 735**, so the database knows they're one unit.
-- **`lsn`** (Log Sequence Number) is the record's address in the log. It only ever increases, so the database always knows the exact order of events.
-- **`desc`** says what happened. `HOT_UPDATE` is an update to a row; `COMMIT` and `ABORT` are the transaction's final outcome.
-
-The key line is **`COMMIT`**. Until that record is safely on disk, tx 735 hasn't happened. tx 736 has its update in the log too, but it ends in `ABORT`, so its change is never made visible.
-
-<Callout type="tip" title="Try it yourself">
-  On a PostgreSQL machine, run `SELECT pg_current_wal_lsn();`, make a few updates inside `BEGIN … COMMIT`, then run `pg_waldump` on the latest file in `$PGDATA/pg_wal/`. MySQL has a similar tool, `mysqlbinlog`, for its binary log.
-</Callout>
+- **`tx`** is the transaction ID. Both updates share **735**, so the database knows they belong together.
+- **`lsn`** is the entry's position in the log. It only goes up, so the order of events is always clear.
+- **`desc`** says what happened. The **`COMMIT`** line is the moment tx 735 became real. tx 736 ends in **`ABORT`**, so its change is never shown to anyone.
 
 #### Rollback
 
-A **rollback** cancels a transaction and puts every row it touched back exactly as it was. It happens in three situations:
+A **rollback** puts every row a transaction touched back the way it was. It happens when:
 
-- **You ask for it:** your code runs `ROLLBACK` (for example, because the card was declined).
-- **The database decides:** a constraint fails, a deadlock is detected, or the transaction is chosen as a victim in a conflict.
-- **The server crashed:** on restart, every transaction that hadn't committed is rolled back automatically.
+- your code runs `ROLLBACK` (for example, the card was declined),
+- the database cancels it (a rule was broken, or two transactions got stuck waiting on each other), or
+- the server crashed before `COMMIT`. On restart, unfinished transactions are rolled back automatically.
 
-To roll back, the database needs to know what the data looked like *before*. That's the job of the undo log.
-
-#### Undo logs and redo logs
+#### Undo and redo logs
 
 ![Undo log stores old values for rollback; redo log stores new values for crash recovery](/images/blog/acid-undo-redo.svg)
 
-- **Undo log = the "before" photo.** It stores the **old** value (A was ₹5,000) so an unfinished transaction can be reversed. This powers rollback.
-- **Redo log = the "after" photo.** It stores the **new** value (A is now ₹4,000) so a committed change can be re-applied if it hadn't reached the data files when the server died. This powers crash recovery and durability.
+- **Undo log = the "before" photo.** It keeps the **old** value so an unfinished transaction can be reversed.
+- **Redo log = the "after" photo.** It keeps the **new** value so a committed change can be re-applied after a crash.
 
-After a crash, recovery runs in two passes:
-
-1. **Redo:** replay the log to bring the data back to the exact moment of the crash.
-2. **Undo:** find transactions with no `COMMIT` record and reverse their changes.
-
-Different databases implement this differently, and it makes a great interview detail:
-
-| Database | How it undoes | How it redoes |
-| --- | --- | --- |
-| **MySQL (InnoDB)** | Separate **undo logs** with old row versions | **Redo log** files |
-| **PostgreSQL** | No undo log. Old row versions stay in the table, and aborted transactions are simply marked invisible | **WAL** (which is a redo log) |
-| **Oracle** | **Undo** tablespace | **Redo** log files |
+After a crash, recovery first **redoes** what's in the log, then **undoes** transactions that never committed.
 
 ## 2. Consistency: rules are rules 📏
 
-> **Consistency means a transaction takes the database from one valid state to another valid state. It can never leave data that breaks the rules.**
+> **Consistency means a transaction moves the database from one valid state to another. It never leaves data that breaks the rules.**
 
-What counts as "valid" depends on the rules you set. For our bank:
-
-- No account balance can go below ₹0.
-- Every account must have an owner.
-- No two accounts can share the same account number.
-- The total money in the system doesn't change during a transfer.
-
-If a transaction would break any of these, the whole transaction is rejected. That's where atomicity helps consistency: the failed transaction rolls back, so nothing half-valid is left behind.
+For our bank, "valid" means: no balance below ₹0, every account has an owner, no duplicate account numbers, and the total money doesn't change during a transfer. If a transaction would break a rule, the whole transaction is rejected and rolled back.
 
 ### The rules the database enforces
 
-These are called **constraints**, and you declare them when creating the table:
+These are **constraints**, declared when you create the table:
 
 ```sql title="accounts.sql"
 CREATE TABLE accounts (
-  id          SERIAL PRIMARY KEY,                    -- unique, never null
-  account_no  VARCHAR(20) UNIQUE NOT NULL,           -- no duplicates
-  owner_email VARCHAR(255) NOT NULL,                 -- must exist
-  balance     NUMERIC(12, 2) NOT NULL CHECK (balance >= 0),  -- never negative
-  branch_id   INT REFERENCES branches(id)            -- branch must exist
+  id          SERIAL PRIMARY KEY,
+  account_no  VARCHAR(20) UNIQUE NOT NULL,
+  owner_email VARCHAR(255) NOT NULL,
+  balance     NUMERIC(12, 2) NOT NULL CHECK (balance >= 0),
+  branch_id   INT REFERENCES branches(id)
 );
 ```
 
-| Constraint | What it guarantees | Breaks when you… |
+| Constraint | Guarantees | Fails when you… |
 | --- | --- | --- |
-| **PRIMARY KEY** | Every row has a unique, non-null identifier | insert a second row with `id = 1` |
-| **NOT NULL** | The column always has a value | insert an account with no email |
-| **UNIQUE** | No two rows share this value | open two accounts with the same account number |
-| **CHECK** | A custom condition holds for every row | set `balance = -500` |
-| **FOREIGN KEY** | References point to rows that actually exist | link an account to branch 999, which doesn't exist |
-| **Data type** | Values fit the column's type | store `'abc'` in an integer column |
-
-Try to overdraw an account and the database refuses, no matter which app, script or intern sent the query:
+| **PRIMARY KEY** | Each row has a unique ID | insert a second row with `id = 1` |
+| **NOT NULL** | The column always has a value | leave the email empty |
+| **UNIQUE** | No two rows share this value | reuse an account number |
+| **CHECK** | A custom condition always holds | set `balance = -500` |
+| **FOREIGN KEY** | Links point to rows that exist | use branch 999, which doesn't exist |
+| **Data type** | Values match the column type | store `'abc'` in a number column |
 
 ```sql
 UPDATE accounts SET balance = balance - 10000 WHERE id = 1;
--- ERROR:  new row for relation "accounts" violates check constraint "accounts_balance_check"
+-- ERROR: new row violates check constraint "accounts_balance_check"
 ```
 
-![Meme: Narayan Shankar from Mohabbatein as the CHECK constraint](/images/blog/acid-meme-mohabbatein.svg "The CHECK constraint has never once made an exception.")
+### How consistency is achieved
 
-### How consistency is achieved: two layers of defence
-
-Here's a subtle point interviewers love: **consistency is the one ACID property the database can't fully guarantee on its own.** The database only knows the rules you *told* it. It has no idea that UPI transfers are capped per day or that a user must finish KYC first.
-
-So consistency is a team effort:
+Consistency is a **team effort**. The database only knows the rules you told it. It has no idea about your daily transfer limit or KYC checks.
 
 ![Two guards: the application layer checks business rules, the database enforces constraints](/images/blog/acid-consistency-gates.svg)
 
-**Database rules** (constraints, data types, foreign keys, triggers):
+- **Database rules** (constraints, types, foreign keys) are checked on every write, from every source. A buggy deploy can't skip them.
+- **The application layer** checks business rules ("max ₹1 lakh per day", "can't send money to yourself"), shows friendly errors, and, importantly, **puts the right steps in one transaction**. If your code commits the debit and credit separately, no constraint can save you.
 
-- Enforced on **every** write, from every source.
-- Can't be skipped by a buggy deploy or a forgotten code path.
-- Your last line of defence.
-
-**The application layer** (your backend code):
-
-- Enforces business rules that are hard or impossible to express as constraints: "daily limit ₹1 lakh", "can't transfer to yourself", "only verified users can withdraw".
-- **Groups the right operations into one transaction.** If your code commits the debit and the credit separately, no constraint in the world will save you.
-- Gives users friendly error messages *before* they hit a database error.
-
-<Callout type="warning" title="Validate in the app, enforce in the database">
-  App-side validation is for user experience. Database constraints are for truth. A cron job, a data-fix script or a second microservice can write to the same table and skip your app's checks completely.
+<Callout type="tip" title="Rule of thumb">
+  Validate in the app for a good user experience. Enforce in the database for correctness.
 </Callout>
 
 ## 3. Isolation: no peeking 🚧
 
-> **Isolation means concurrent transactions don't interfere with each other. Each one behaves as if it were running alone.**
+> **Isolation means transactions running at the same time don't interfere with each other. Each one behaves as if it were alone.**
 
-Your bank doesn't process one transfer at a time. Thousands run at the same moment. Isolation makes sure they don't trip over each other's half-finished work.
+### Why it matters
 
-### Why it matters: life without isolation
+A flash sale. **2 iPhones left.** Two buyers click "Buy" at the same moment. Each checkout reads the stock, subtracts one, and writes it back:
 
-It's a flash sale. **2 iPhones left.** Two buyers click "Buy" at the same instant, and each checkout does the obvious thing: read the stock, subtract one, write it back.
+![Animated: two buyers both read stock 2, both write 1, final stock is 1 instead of 0](/images/blog/acid-lost-update.svg "Two phones sold, but stock only dropped by one.")
 
-![Animated: two buyers both read stock 2, both write 1, final stock is 1 instead of 0](/images/blog/acid-lost-update.svg "Two phones shipped. The database thinks one is still in the warehouse.")
+Nothing crashed and no rule was broken, yet the result is wrong. That's what happens without isolation.
 
-Both transactions were individually correct, and both committed. The result is still wrong. **Atomicity didn't help** (nothing crashed), and **consistency didn't help** (stock = 1 is a perfectly valid number). This is a pure isolation problem.
+### The 5 classic problems
 
-Without proper isolation you get oversold tickets, double-spent wallet balances, wrong reports and very angry customers.
-
-### The 5 classic concurrency problems
-
-Interviewers usually want one crisp line for each:
-
-| Problem | One-line explanation |
+| Problem | In one line |
 | --- | --- |
-| **Dirty read** | You read data another transaction changed but **hasn't committed** yet, and it might roll back. |
-| **Non-repeatable read** | You read the **same row twice** in one transaction and get **different values**, because someone else committed in between. |
-| **Phantom read** | You run the **same query twice** and **new rows appear** (or disappear), because someone inserted or deleted matching rows. |
-| **Lost update** | Two transactions read the same value and both write back, so **one update silently overwrites the other**. |
-| **Write skew** | Two transactions read the same data, then update **different rows** based on what they read, together breaking a rule neither broke alone. |
+| **Dirty read** | You read another transaction's change **before it commits**, and it might be cancelled. |
+| **Non-repeatable read** | You read the **same row twice** and get **different values**. |
+| **Phantom read** | You run the **same query twice** and **new rows appear** (or vanish). |
+| **Lost update** | Two transactions update the same value and **one silently overwrites the other**. |
+| **Write skew** | Two transactions read the same data, then update **different rows**, together breaking a rule. |
 
 ![Four timelines: dirty read, non-repeatable read, phantom read and write skew](/images/blog/acid-anomalies.svg)
 
-The dirty read is the most dramatic, so it gets its own meme:
-
-![Meme: Hera Pheri, "Paisa hi paisa hoga" on a dirty read, then "Utha le re baba" after rollback](/images/blog/acid-meme-hera-pheri.svg "Never spend money you read from an uncommitted transaction.")
-
 ### Isolation levels
 
-Perfect isolation is expensive: the more you prevent, the more transactions have to wait or retry. So the SQL standard defines **isolation levels**, which let you choose how much protection you want in exchange for speed.
+Full isolation is slow, because transactions have to wait for each other or retry. So databases offer **isolation levels**.
 
-> **An isolation level defines which concurrency problems a transaction is protected from.**
+> **An isolation level decides which of these problems a transaction is protected from.** Stricter levels are safer but slower.
 
 ![Matrix of the four isolation levels and which anomalies each prevents](/images/blog/acid-isolation-levels.svg)
 
-Let's go through them using one table:
-
-```sql
--- accounts: id = 'A', balance = 5000
-```
+In each example, account A starts with ₹5,000.
 
 #### Repeatable Read
 
-> **Once you read a row, it looks the same for the rest of your transaction, even if others change and commit it.**
+> **Once you read a row, it stays the same for the rest of your transaction.**
 
-Your transaction works on a **snapshot** taken at its first read. Other people's commits don't show up until you start a new transaction.
+Your transaction reads from a **snapshot** taken at its first read.
 
-| Time | T1 (Repeatable Read) | T2 |
+| Step | T1 (Repeatable Read) | T2 |
 | --- | --- | --- |
-| 1 | `BEGIN;` `SELECT balance … → 5000` | |
-| 2 | | `UPDATE … SET balance = 4000; COMMIT;` |
-| 3 | `SELECT balance … → 5000` ✅ same as before | |
-| 4 | `COMMIT;` A new transaction would now see 4000. | |
+| 1 | reads A → 5000 | |
+| 2 | | sets A = 4000, commits |
+| 3 | reads A → **5000** (same as before) | |
 
-- ✅ Prevents dirty reads and non-repeatable reads.
-- ⚠️ Phantoms: the SQL standard allows them here, but PostgreSQL's snapshot prevents them, and MySQL prevents most of them with "next-key" locks.
-- **Use it for:** reports and multi-step reads that need a stable view, like generating a monthly statement.
-- **The default in MySQL (InnoDB).**
+- ✅ Stops dirty reads and non-repeatable reads.
+- **Default in MySQL.**
 
 #### Read Committed
 
-> **You only ever see committed data, but each statement sees the latest committed data.**
+> **You only see committed data, but each query sees the latest committed version.**
 
-Each `SELECT` gets a fresh snapshot, so two reads in the same transaction can disagree.
-
-| Time | T1 (Read Committed) | T2 |
+| Step | T1 (Read Committed) | T2 |
 | --- | --- | --- |
-| 1 | `BEGIN;` `SELECT balance … → 5000` | |
-| 2 | | `UPDATE … SET balance = 4000;` (not committed) |
-| 3 | `SELECT balance … → 5000` ✅ no dirty read | |
-| 4 | | `COMMIT;` |
-| 5 | `SELECT balance … → 4000` ⚠️ changed mid-transaction | |
+| 1 | reads A → 5000 | |
+| 2 | | sets A = 4000 (not committed) |
+| 3 | reads A → 5000 (no dirty read ✅) | |
+| 4 | | commits |
+| 5 | reads A → **4000** (changed mid-transaction) | |
 
-- ✅ Prevents dirty reads.
-- ❌ Non-repeatable reads, phantoms and lost updates can happen.
-- **Use it for:** most everyday web app queries. It's a sensible balance.
-- **The default in PostgreSQL, Oracle and SQL Server.**
+- ✅ Stops dirty reads. ❌ Other problems can still happen.
+- A good balance for most web apps.
+- **Default in PostgreSQL, Oracle and SQL Server.**
 
 #### Read Uncommitted
 
 > **You can see other transactions' changes even before they commit.**
 
-| Time | T1 (Read Uncommitted) | T2 |
+| Step | T1 (Read Uncommitted) | T2 |
 | --- | --- | --- |
-| 1 | | `BEGIN;` `UPDATE … SET balance = 1000000;` |
-| 2 | `SELECT balance … → 1000000` 😬 dirty read | |
-| 3 | | `ROLLBACK;` |
-| 4 | T1 already acted on money that never existed | |
+| 1 | | sets A = 10,00,000 (not committed) |
+| 2 | reads A → **10,00,000** (dirty read) | |
+| 3 | | rolls back |
 
-- ❌ Allows everything, including dirty reads.
-- **Use it for:** almost nothing. Maybe a rough "approximately how many rows?" dashboard where exactness doesn't matter.
-- PostgreSQL accepts this level but quietly treats it as Read Committed.
+- ❌ Allows everything. Rarely used.
 
 #### Serializable
 
-> **The strongest level. The result is guaranteed to be the same as if the transactions ran one after another, in some order.**
+> **The strictest level. The result is the same as if transactions ran one after another.**
 
-Remember the doctors' write skew? Under Serializable, the database notices that both transactions read "2 doctors on call" and then acted on it. It lets one commit and aborts the other:
+Take the write-skew example: two doctors on call, and at least one must stay. Both check, see 2 on call, and both go off call. Under Serializable, the database spots the conflict:
 
-| Time | Dr. Asha (Serializable) | Dr. Ravi (Serializable) |
+| Step | Dr. Asha | Dr. Ravi |
 | --- | --- | --- |
-| 1 | `SELECT count(*) … on_call → 2` | `SELECT count(*) … on_call → 2` |
-| 2 | `UPDATE … SET on_call = false WHERE name = 'Asha';` | `UPDATE … SET on_call = false WHERE name = 'Ravi';` |
-| 3 | `COMMIT;` ✅ | `COMMIT;` ❌ `ERROR: could not serialize access…` |
+| 1 | sees 2 on call | sees 2 on call |
+| 2 | goes off call | goes off call |
+| 3 | commits ✅ | commit **fails**: "could not serialize access" |
 
-Dr. Ravi's app retries, now sees only 1 doctor on call, and refuses to let him go. The rule holds.
+Dr. Ravi's app retries, sees only 1 doctor left, and refuses. The rule holds.
 
-- ✅ Prevents every anomaly in our list, including write skew.
-- ❌ More waiting or more aborted transactions. **Your app must be ready to retry.**
-- **Use it for:** money movement, inventory, seat booking: anywhere correctness beats throughput.
+- ✅ Stops every problem in the list.
+- ❌ Slower, and **your app must retry** failed transactions.
+- Use it for money, inventory and bookings, where correctness matters most.
 
-<Callout type="tip" title="Interview shortcut">
-  Read Uncommitted → no protection. Read Committed → no dirty reads. Repeatable Read → plus stable rows. Serializable → plus phantoms and write skew, as if transactions ran one by one.
-</Callout>
+The main difference between the two middle levels is **when the snapshot is taken**:
 
-### Setting the isolation level in SQL
+![Repeatable Read takes one snapshot per transaction; Read Committed takes a new one per query](/images/blog/acid-snapshot-timing.svg)
+
+Not sure which to pick? Use this guide:
+
+![Flowchart for choosing an isolation level](/images/blog/acid-choose-isolation.svg)
+
+### Setting the isolation level
 
 ```sql title="PostgreSQL"
--- For one transaction
-BEGIN ISOLATION LEVEL SERIALIZABLE;
--- ... your queries ...
+BEGIN ISOLATION LEVEL SERIALIZABLE;   -- just this transaction
+-- your queries
 COMMIT;
 
--- Or as the first statement inside a transaction
-BEGIN;
-SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
-COMMIT;
-
--- For every transaction in this session
-SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL SERIALIZABLE;
-
--- Check the current level
-SHOW transaction_isolation;
+SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL SERIALIZABLE;  -- whole session
 ```
 
 ```sql title="MySQL"
--- Only the next transaction
-SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
-
--- Every transaction in this session
-SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;
-
--- Check the current level
-SELECT @@transaction_isolation;
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;          -- next transaction only
+SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;  -- whole session
 ```
 
-### How databases implement isolation
-
-There are three main techniques, and real databases combine them.
+### How isolation is implemented
 
 ![Locks make transactions wait their turn; MVCC gives each reader its own snapshot](/images/blog/acid-locks-mvcc.svg)
 
 #### 1. Locks 🔒
 
-The oldest and simplest idea: before touching a row, take a lock on it.
+Before touching a row, a transaction locks it.
 
-- **Shared lock (S):** "I'm reading this." Many transactions can hold shared locks on the same row.
-- **Exclusive lock (X):** "I'm writing this." Nobody else can read-lock or write-lock it until I'm done.
-- **Two-phase locking (2PL):** a transaction acquires locks as it goes and releases them **only at commit or rollback**. That's what makes it safe.
+- **Shared lock:** "I'm reading." Many readers can share it.
+- **Exclusive lock:** "I'm writing." Everyone else waits.
+- Locks are held until `COMMIT` or `ROLLBACK`.
 
-You can also lock rows explicitly. This fixes our iPhone flash sale:
+This fixes the iPhone sale:
 
 ```sql
 BEGIN;
-SELECT stock FROM products WHERE id = 'iphone-17' FOR UPDATE;  -- lock the row
--- Buyer 2's SELECT … FOR UPDATE now waits here until we commit
-UPDATE products SET stock = stock - 1 WHERE id = 'iphone-17';
+SELECT stock FROM products WHERE id = 'iphone' FOR UPDATE;  -- lock the row
+UPDATE products SET stock = stock - 1 WHERE id = 'iphone';
 COMMIT;
 ```
 
-(Even simpler: `UPDATE products SET stock = stock - 1 WHERE id = 'iphone-17' AND stock > 0;` does the read and write in one atomic statement.)
+The second buyer waits, then sees the updated stock. The downside is waiting, and **deadlocks** (two transactions waiting on each other), which the database fixes by cancelling one.
 
-**Downside:** waiting, and **deadlocks**, where T1 waits for T2 while T2 waits for T1. Databases detect this and kill one of them.
+![Animated: Buyer 2 waits for the lock, then reads the updated stock; final stock is 0](/images/blog/acid-for-update.svg "Same sale, now with a lock. Stock ends at 0.")
 
 #### 2. MVCC (Multi-Version Concurrency Control) 📸
 
-Instead of making readers wait, the database **keeps multiple versions of each row**. When a transaction updates a row, it creates a new version instead of overwriting the old one. Each transaction reads the version that was committed as of its snapshot.
+Instead of overwriting a row, the database **keeps old versions**. Each transaction reads the version that was committed when its snapshot was taken.
 
-- Readers never block writers, and writers never block readers.
-- Two writers on the *same row* still conflict, so locks are still used for writes.
-- Used by PostgreSQL, MySQL InnoDB, Oracle and SQL Server's snapshot isolation.
+- Readers don't block writers, and writers don't block readers.
+- Used by PostgreSQL, MySQL and Oracle. This is how Repeatable Read gives you a "frozen" view.
 
-This is how Repeatable Read gives you a "frozen" view: your transaction keeps reading the old version even after someone commits a new one.
+#### 3. Conflict detection 🕵️
 
-![Meme: Deewar remix, MVCC has snapshots, two-phase locking has the lock](/images/blog/acid-meme-deewar.svg "Both are right. Modern databases use both.")
-
-#### 3. Conflict detection (optimistic concurrency) 🕵️
-
-Instead of preventing conflicts up front, let transactions run freely, then **check for conflicts at commit time** and abort the loser.
-
-- **Serializable Snapshot Isolation (SSI)**, used by PostgreSQL's Serializable level, tracks who read what and who wrote what. If it spots a pattern that could produce a non-serial result (like our doctors), it aborts one transaction with a serialization error.
-- **Application-level optimistic locking** uses a `version` column:
+Let transactions run freely, then **check for conflicts at commit** and cancel the loser. PostgreSQL's Serializable level works this way. Apps can do something similar with a `version` column:
 
 ```sql
--- read: version = 7
-UPDATE products
-SET stock = stock - 1, version = version + 1
-WHERE id = 'iphone-17' AND version = 7;
+UPDATE products SET stock = stock - 1, version = version + 1
+WHERE id = 'iphone' AND version = 7;
 -- 0 rows updated? Someone changed it first. Re-read and retry.
 ```
 
-Optimistic approaches are fast when conflicts are rare and wasteful when they're common, because lots of work gets thrown away.
+![Flowchart: read the row, write only if the version is unchanged, otherwise retry](/images/blog/acid-optimistic-retry.svg)
 
-## 4. Durability: commit = forever 💾
+This is fast when conflicts are rare, and wasteful when they're common.
 
-> **Durability means once a transaction is committed, its changes survive any later crash, power failure or restart.**
+## 4. Durability: commit means forever 💾
 
-When the database tells you "COMMIT OK" and your app shows a green tick, that ₹1000 transfer is permanent. If the power goes out one millisecond later, the transfer is still there when the server comes back.
+> **Durability means once a transaction is committed, it survives crashes, power cuts and restarts.**
 
-![Meme: Wanted, "Ek baar jo maine commitment kar di…"](/images/blog/acid-meme-wanted.svg "The most loyal promise in software.")
+When the database says "COMMIT OK" and your app shows a green tick, the transfer is permanent, even if the power goes out a millisecond later.
 
-### Myths and misconceptions about durability
+### Common myths
 
-- ❌ **"Durable means the data is in the database."** Data sitting in the database's memory (buffer pool) isn't durable. A power cut wipes RAM. Durable means the change, or a log of it, is on **non-volatile storage**.
-- ❌ **"Durability means I don't need backups."** Durability protects against crashes. It does **not** protect against a dead disk, a burnt data center, ransomware or someone running `DELETE FROM accounts;` without a `WHERE`. For that you need replication and backups.
-- ❌ **"Writing to a file means it's on disk."** A normal write usually lands in the operating system's cache first. Only an **`fsync`** forces it onto the physical disk. Even then, some cheap disks lie about having flushed, which is why serious servers use drives with power-loss protection.
-- ❌ **"Committed on the primary means safe in a cluster."** With asynchronous replication, the primary can confirm a commit and then die before the replica receives it. That commit is gone after failover.
+- ❌ **"It's in the database, so it's durable."** Data only in memory is lost on a power cut. Durable means the change (or its log entry) is **on disk**.
+- ❌ **"Durability means no backups needed."** Durability protects against crashes, not a dead disk, a fire or an accidental `DELETE`. For those you need **backups and replicas**.
+- ❌ **"Writing a file puts it on disk."** Normal writes often sit in the operating system's memory first. Only **`fsync`** forces them onto the disk.
+
+![A write passes through database memory, the OS cache and the disk cache; only fsync pushes it to disk storage](/images/blog/acid-write-path.svg)
 
 ### How durability is achieved: WAL again
 
-The same WAL that powers atomicity also powers durability:
+1. On `COMMIT`, the database writes the commit entry to the WAL and calls `fsync`.
+2. Only after the disk confirms does it reply "COMMIT OK".
+3. After a crash, it **replays the WAL** to restore every committed change.
 
-1. On `COMMIT`, the database writes the commit record to the WAL and calls **`fsync`**.
-2. Only after the disk confirms does the database reply "COMMIT OK".
-3. The actual data files can be updated later. After a crash, the database **replays the WAL** (the redo pass) to restore every committed change.
+To stay fast, many commits share one `fsync` (**group commit**). To survive losing a whole machine, the WAL is also copied to other servers (**replication**).
 
-Two tricks keep this fast:
+### Durability vs speed
 
-- **Sequential writes:** appending to a log is far faster than updating random pages all over the disk.
-- **Group commit:** if 50 transactions commit within the same few milliseconds, the database flushes all their WAL records with **one** `fsync` instead of 50.
-
-For protection beyond a single machine, databases add **replication**: copying the WAL to other servers, ideally in another availability zone.
-
-### The trade-off: durability vs speed
-
-Every `fsync` is a wait. On a fast SSD it's a fraction of a millisecond; on a cloud disk or across a network to a replica it can be several milliseconds. If you need hundreds of thousands of writes per second, those waits add up. So databases let you turn the dial:
+Every `fsync` is a small wait. At hundreds of thousands of writes per second, those waits add up, so databases let you choose:
 
 ![The durability dial, from never flushing to synchronous replication](/images/blog/acid-durability-tradeoff.svg)
 
-| Setting | What happens on commit | What a crash can lose |
-| --- | --- | --- |
-| PostgreSQL `synchronous_commit = on` · MySQL `innodb_flush_log_at_trx_commit = 1` (**defaults**) | WAL is flushed to disk before COMMIT returns | Nothing committed |
-| PostgreSQL `synchronous_commit = off` | COMMIT returns before the WAL is flushed | The last few hundred milliseconds of commits. No corruption. |
-| MySQL `innodb_flush_log_at_trx_commit = 2` | Log is written to the OS cache every commit, flushed to disk about once a second | Up to ~1 second, but only if the whole OS or machine crashes |
-| MySQL `innodb_flush_log_at_trx_commit = 0` | Log is written and flushed about once a second | Up to ~1 second, even if only MySQL crashes |
-| Redis `appendfsync everysec` | Append-only file flushed every second | Up to ~1 second |
-| Synchronous replication | COMMIT waits until a standby server also has the WAL | Nothing, even if the primary server is destroyed |
+| Setting | On a crash you can lose |
+| --- | --- |
+| Flush on every commit (**default** in PostgreSQL and MySQL) | Nothing committed |
+| Flush about once a second (PostgreSQL `synchronous_commit = off`, MySQL `innodb_flush_log_at_trx_commit = 2`) | About the last second of commits |
+| Wait for a second server too (synchronous replication) | Nothing, even if the whole server dies |
 
 <Callout type="danger" title="Don't confuse these">
-  PostgreSQL's `synchronous_commit = off` only risks losing the most recent commits. Setting **`fsync = off`** is completely different: a crash can **corrupt the entire database**. Never use it in production.
+  `synchronous_commit = off` can lose the last moment of commits. PostgreSQL's **`fsync = off`** can **corrupt the whole database**. Never use it in production.
 </Callout>
 
-PostgreSQL even lets you choose per transaction, so you can be fast for unimportant writes and strict for important ones:
+**🛡️ Durability first**, where losing one record is a disaster:
 
-```sql
-BEGIN;
-SET LOCAL synchronous_commit = off;     -- only for this transaction
-INSERT INTO page_views (slug, viewed_at) VALUES ('acid-properties-explained', now());
-COMMIT;
-```
+- payments and UPI
+- e-commerce orders
+- seat and ticket bookings
+- medical records and stock trades
 
-### When durability wins, and when speed wins
+**🚀 Speed first**, where losing the last second is fine:
 
-**🛡️ Durability first.** Losing even one committed record is unacceptable:
+- analytics and click events
+- view counters and likes (like the ones on this blog 👀)
+- app logs, metrics and sensor readings
+- caches and sessions
 
-- **Payments, UPI, wallets:** "money debited" must never be forgotten.
-- **E-commerce orders:** the customer has an order confirmation email.
-- **Ticket and seat bookings (think IRCTC Tatkal):** two people must never hold the same seat.
-- **Medical records and stock trades:** legal and financial consequences.
-
-**🚀 Speed first.** Losing the last second of data is a shrug:
-
-- **Analytics and click events:** missing 3 clicks out of 3 million changes nothing.
-- **View counters and likes** (like the ones on this blog 👀): if a crash eats a view, nobody notices.
-- **Application logs, metrics and IoT sensor readings** arriving every 100 ms.
-- **Caches and sessions:** the data can be rebuilt or the user can log in again.
-
-The skill isn't memorising the settings. It's asking: **"If the last second of this data vanished, would anyone care?"**
-
-## ACID interview cheat sheet 🎯
-
-Quick answers to the questions that come up again and again:
-
-**Q: What is a transaction?**
-A group of operations treated as one unit of work: either all succeed (commit) or none take effect (rollback).
-
-**Q: Explain ACID in one line each.**
-Atomicity: all or nothing. Consistency: valid state to valid state. Isolation: concurrent transactions don't see each other's in-progress work. Durability: committed data survives crashes.
-
-**Q: How is atomicity implemented?**
-With logging. Undo information to reverse unfinished transactions, and a write-ahead log so recovery knows what was committed.
-
-**Q: What is WAL and why is it fast?**
-Write-Ahead Logging: log records hit disk before data pages do. It's fast because appending to a log is sequential, and the slow random writes to data files happen later in the background.
-
-**Q: Undo log vs redo log?**
-Undo stores old values, used for rollback. Redo stores new values, used to replay committed changes after a crash.
-
-**Q: Who is responsible for consistency?**
-Both. The database enforces declared constraints (PK, FK, UNIQUE, NOT NULL, CHECK, types). The application enforces business rules and groups operations into the right transactions.
-
-**Q: Dirty read vs non-repeatable read vs phantom read?**
-Dirty: reading uncommitted data. Non-repeatable: the same row returns different values. Phantom: the same query returns a different set of rows.
-
-**Q: What's the default isolation level?**
-Read Committed in PostgreSQL, Oracle and SQL Server. Repeatable Read in MySQL InnoDB.
-
-**Q: What is write skew, and which level prevents it?**
-Two transactions read overlapping data and update different rows, together breaking a rule. Only Serializable prevents it.
-
-**Q: Locks vs MVCC?**
-Locks make conflicting transactions wait. MVCC keeps multiple row versions so readers see a snapshot and never block writers. Most databases use MVCC for reads and locks for writes.
-
-**Q: How would you prevent overselling the last item?**
-An atomic conditional update (`UPDATE … SET stock = stock - 1 WHERE id = ? AND stock > 0`), or `SELECT … FOR UPDATE`, or a Serializable transaction with retries.
-
-**Q: Is a committed transaction safe if the disk dies?**
-Not by durability alone. Durability covers crashes. Disk and machine failures need replication and backups.
+The question to ask: **"If the last second of this data vanished, would anyone care?"**
 
 ## TL;DR 🧾
 
-- A **transaction** bundles operations into one all-or-nothing unit: `BEGIN … COMMIT` (or `ROLLBACK`).
-- **ACID** is the set of guarantees a transactional database makes. You don't switch it on; you use transactions, and the engine keeps the promises.
-- **Atomicity**: no half-finished transfers. Achieved with WAL, undo logs and rollback.
-- **Consistency**: data always follows the rules. Achieved with database constraints **plus** application logic.
-- **Isolation**: concurrent transactions don't corrupt each other. Tunable with isolation levels; implemented with locks, MVCC and conflict detection.
-- **Durability**: "COMMIT OK" means forever. Achieved with WAL + `fsync`, extended with replication, and tunable when speed matters more.
+- A **transaction** is an all-or-nothing group of operations: `BEGIN … COMMIT` or `ROLLBACK`.
+- **Atomicity:** no half-done work. Achieved with WAL, undo logs and rollback.
+- **Consistency:** data always follows the rules. Achieved with constraints **and** application logic.
+- **Isolation:** concurrent transactions don't corrupt each other. Tuned with isolation levels; built with locks, MVCC and conflict detection.
+- **Durability:** "COMMIT OK" means forever. Achieved with WAL + `fsync`, plus replication. You can trade some of it for speed.
 
-Next time your UPI payment shows "pending" for a few seconds, you'll know there's a whole ACID-compliant machine making sure your ₹1000 lands exactly once. 😎
+Next time a UPI payment shows "pending" for a few seconds, you'll know there's a whole ACID machine making sure your ₹1000 lands exactly once. 😎

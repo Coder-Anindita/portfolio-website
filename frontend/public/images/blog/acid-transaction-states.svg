@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs>
+  <pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern>
+  <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#52525b"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">The life of a transaction</text>
+<text x="40" y="82" font-size="16" fill="#71717a">Every transaction ends in exactly one of two places: Committed or Aborted.</text>
+
+<!-- states -->
+<g text-anchor="middle">
+  <rect x="50" y="250" width="210" height="100" rx="16" fill="#eef2ff" stroke="#4338ca" stroke-width="2"/>
+  <text x="155" y="292" font-size="22" font-weight="700" fill="#4338ca">Active</text>
+  <text x="155" y="322" font-family="JetBrains Mono, Consolas, monospace" font-size="15" fill="#52525b">BEGIN; UPDATE …</text>
+
+  <rect x="450" y="120" width="260" height="100" rx="16" fill="#fff" stroke="#d6d3d1" stroke-width="2"/>
+  <text x="580" y="162" font-size="22" font-weight="700" fill="#18181b">Partially committed</text>
+  <text x="580" y="192" font-size="15" fill="#71717a">last step done, saving the log</text>
+
+  <rect x="900" y="120" width="250" height="100" rx="16" fill="#0f766e"/>
+  <text x="1025" y="162" font-size="24" font-weight="700" fill="#fff">✅ Committed</text>
+  <text x="1025" y="192" font-size="15" fill="#ccfbf1">permanent and visible</text>
+
+  <rect x="450" y="380" width="260" height="100" rx="16" fill="#fff1f2" stroke="#e11d48" stroke-width="2"/>
+  <text x="580" y="422" font-size="22" font-weight="700" fill="#e11d48">Failed</text>
+  <text x="580" y="452" font-size="15" fill="#71717a">something went wrong</text>
+
+  <rect x="900" y="380" width="250" height="100" rx="16" fill="#18181b"/>
+  <text x="1025" y="422" font-size="24" font-weight="700" fill="#fff">↩️ Aborted</text>
+  <text x="1025" y="452" font-size="15" fill="#d4d4d8">all changes undone</text>
+</g>
+
+<!-- arrows -->
+<g stroke="#52525b" stroke-width="2.5" fill="none" marker-end="url(#a)">
+  <path d="M260 280 C 340 250, 380 190, 442 175"/>
+  <line x1="714" y1="170" x2="892" y2="170"/>
+  <path d="M260 320 C 340 350, 380 410, 442 425"/>
+  <line x1="580" y1="224" x2="580" y2="372"/>
+  <line x1="714" y1="430" x2="892" y2="430"/>
+</g>
+<g font-size="15" fill="#18181b">
+  <text x="270" y="200">COMMIT;</text>
+  <text x="740" y="155">log saved to disk</text>
+  <text x="270" y="420">error, ROLLBACK;</text><text x="270" y="442">or crash</text>
+  <text x="592" y="300">disk write fails</text>
+  <text x="740" y="415">undo finished</text>
+</g>
+
+<rect x="50" y="520" width="1100" height="56" rx="12" fill="#fff" stroke="#e4e4e7"/>
+<text x="600" y="555" text-anchor="middle" font-size="17" fill="#52525b">There is no "half done" state at the end. After Aborted, your app can retry the transaction or show an error.</text>
+</svg>

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs>
+  <pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern>
+  <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#52525b"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">Which isolation level should I use?</text>
+<text x="40" y="82" font-size="16" fill="#71717a">A quick decision guide for everyday backend work.</text>
+
+<g text-anchor="middle">
+  <rect x="40" y="200" width="200" height="90" rx="45" fill="#18181b"/>
+  <text x="140" y="252" font-size="19" font-weight="700" fill="#fff">New transaction</text>
+
+  <polygon points="470,130 650,245 470,360 290,245" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+  <text x="470" y="225" font-size="17" font-weight="700" fill="#18181b">Can two users at</text>
+  <text x="470" y="248" font-size="17" font-weight="700" fill="#18181b">once break a rule?</text>
+  <text x="470" y="272" font-size="14" fill="#71717a">money, stock, seats</text>
+
+  <rect x="760" y="190" width="400" height="110" rx="16" fill="#0f766e"/>
+  <text x="960" y="232" font-size="21" font-weight="700" fill="#fff">Serializable + retries</text>
+  <text x="960" y="264" font-size="15" fill="#ccfbf1">or lock the rows with SELECT … FOR UPDATE</text>
+
+  <polygon points="470,400 650,490 470,580 290,490" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+  <text x="470" y="482" font-size="17" font-weight="700" fill="#18181b">Do you read the same</text>
+  <text x="470" y="505" font-size="17" font-weight="700" fill="#18181b">data several times?</text>
+  <text x="470" y="527" font-size="14" fill="#71717a">reports, statements</text>
+
+  <rect x="760" y="380" width="400" height="90" rx="16" fill="#eef2ff" stroke="#4338ca" stroke-width="2"/>
+  <text x="960" y="420" font-size="21" font-weight="700" fill="#4338ca">Repeatable Read</text>
+  <text x="960" y="448" font-size="15" fill="#52525b">a stable snapshot for the whole transaction</text>
+
+  <rect x="760" y="510" width="400" height="90" rx="16" fill="#fffbeb" stroke="#b45309" stroke-width="2"/>
+  <text x="960" y="550" font-size="21" font-weight="700" fill="#b45309">Read Committed</text>
+  <text x="960" y="578" font-size="15" fill="#52525b">the default, fine for most queries</text>
+</g>
+
+<g stroke="#52525b" stroke-width="2.5" fill="none" marker-end="url(#a)">
+  <line x1="244" y1="245" x2="282" y2="245"/>
+  <line x1="654" y1="245" x2="752" y2="245"/>
+  <line x1="470" y1="364" x2="470" y2="392"/>
+  <path d="M654 490 L700 490 L700 425 L752 425"/>
+  <path d="M470 584 L470 610 L720 610 L720 555 L752 555"/>
+</g>
+<g font-size="16" font-weight="700">
+  <text x="680" y="232" fill="#0f766e">yes</text>
+  <text x="482" y="385" fill="#e11d48">no</text>
+  <text x="664" y="478" fill="#0f766e">yes</text>
+  <text x="482" y="604" fill="#e11d48">no</text>
+</g>
+<text x="40" y="620" font-size="14" fill="#71717a">Read Uncommitted: almost never.</text>
+</svg>

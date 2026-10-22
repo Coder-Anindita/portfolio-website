@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs>
+  <pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern>
+  <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#a8a29e"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">Repeatable Read vs Read Committed: when is the snapshot taken?</text>
+<text x="40" y="82" font-size="16" fill="#71717a">A starts at ₹5,000. In the middle, another transaction changes it to ₹4,000 and commits.</text>
+
+<!-- other transaction's commit -->
+<line x1="640" y1="115" x2="640" y2="545" stroke="#e11d48" stroke-width="3" stroke-dasharray="8 6"/>
+<rect x="520" y="105" width="240" height="40" rx="10" fill="#e11d48"/>
+<text x="640" y="131" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">T2 commits A = ₹4,000</text>
+
+<!-- RR row -->
+<rect x="40" y="165" width="1120" height="170" rx="16" fill="#fff" stroke="#c7d2fe" stroke-width="2"/>
+<text x="65" y="200" font-size="20" font-weight="700" fill="#4338ca">Repeatable Read</text>
+<text x="65" y="225" font-size="15" fill="#71717a">one snapshot for the whole transaction</text>
+<line x1="320" y1="270" x2="1130" y2="270" stroke="#a8a29e" stroke-width="2" marker-end="url(#a)"/>
+<g text-anchor="middle">
+  <circle cx="340" cy="270" r="22" fill="#4338ca"/><text x="340" y="277" font-size="20">📸</text>
+  <text x="340" y="315" font-size="14" fill="#4338ca" font-weight="600">snapshot</text>
+  <rect x="400" y="245" width="190" height="50" rx="10" fill="#eef2ff"/><text x="495" y="276" font-family="JetBrains Mono, Consolas, monospace" font-size="16" fill="#18181b">read A → 5000</text>
+  <rect x="800" y="245" width="250" height="50" rx="10" fill="#eef2ff"/><text x="925" y="276" font-family="JetBrains Mono, Consolas, monospace" font-size="16" fill="#18181b">read A → 5000 ✅</text>
+  <text x="925" y="318" font-size="14" fill="#4338ca">same snapshot, same answer</text>
+</g>
+
+<!-- RC row -->
+<rect x="40" y="355" width="1120" height="170" rx="16" fill="#fff" stroke="#fde68a" stroke-width="2"/>
+<text x="65" y="390" font-size="20" font-weight="700" fill="#b45309">Read Committed</text>
+<text x="65" y="415" font-size="15" fill="#71717a">a fresh snapshot for every query</text>
+<line x1="320" y1="460" x2="1130" y2="460" stroke="#a8a29e" stroke-width="2" marker-end="url(#a)"/>
+<g text-anchor="middle">
+  <circle cx="340" cy="460" r="22" fill="#d97706"/><text x="340" y="467" font-size="20">📸</text>
+  <rect x="400" y="435" width="190" height="50" rx="10" fill="#fffbeb"/><text x="495" y="466" font-family="JetBrains Mono, Consolas, monospace" font-size="16" fill="#18181b">read A → 5000</text>
+  <circle cx="740" cy="460" r="22" fill="#d97706"/><text x="740" y="467" font-size="20">📸</text>
+  <rect x="800" y="435" width="250" height="50" rx="10" fill="#fffbeb"/><text x="925" y="466" font-family="JetBrains Mono, Consolas, monospace" font-size="16" fill="#18181b">read A → 4000 ⚠️</text>
+  <text x="925" y="508" font-size="14" fill="#b45309">new snapshot sees the new value</text>
+</g>
+
+<text x="600" y="578" text-anchor="middle" font-size="17" fill="#52525b">Neither level ever shows uncommitted data. They only differ in <tspan font-weight="700">when</tspan> the snapshot is taken.</text>
+</svg>
