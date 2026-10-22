@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs>
+  <pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern>
+  <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#52525b"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">Crash recovery: old data files + WAL = correct data</text>
+<text x="40" y="82" font-size="16" fill="#71717a">The server crashed right after tx 735 got "COMMIT OK". Here's what happens on restart.</text>
+
+<!-- data files -->
+<rect x="40" y="120" width="300" height="260" rx="16" fill="#fff" stroke="#d6d3d1" stroke-width="2"/>
+<text x="190" y="160" text-anchor="middle" font-size="20" font-weight="700" fill="#18181b">🗄️ Data files on disk</text>
+<text x="190" y="185" text-anchor="middle" font-size="14" fill="#71717a">as of the last checkpoint</text>
+<g font-family="JetBrains Mono, Consolas, monospace" font-size="18" fill="#18181b">
+  <text x="80" y="240">A = 5000</text><text x="80" y="280">B = 2000</text><text x="80" y="320">C = 100</text>
+</g>
+<text x="190" y="360" text-anchor="middle" font-size="15" font-weight="600" fill="#e11d48">stale: missing tx 735</text>
+
+<!-- WAL -->
+<rect x="400" y="120" width="400" height="260" rx="16" fill="#f0fdfa" stroke="#0f766e" stroke-width="2"/>
+<text x="600" y="160" text-anchor="middle" font-size="20" font-weight="700" fill="#0f766e">📒 WAL since the checkpoint</text>
+<text x="600" y="185" text-anchor="middle" font-size="14" fill="#71717a">safe on disk, thanks to fsync</text>
+<g font-family="JetBrains Mono, Consolas, monospace" font-size="16" fill="#18181b">
+  <text x="425" y="230">tx 735  A: 5000 → 4000</text>
+  <text x="425" y="262">tx 735  B: 2000 → 3000</text>
+  <text x="425" y="294" font-weight="700" fill="#0f766e">tx 735  COMMIT ✅</text>
+  <text x="425" y="326" fill="#71717a">tx 736  C: 100 → 50</text>
+  <text x="425" y="358" fill="#e11d48">tx 736  (no COMMIT) ❌</text>
+</g>
+
+<!-- result -->
+<rect x="860" y="120" width="300" height="260" rx="16" fill="#0f766e"/>
+<text x="1010" y="160" text-anchor="middle" font-size="20" font-weight="700" fill="#fff">✅ After recovery</text>
+<text x="1010" y="185" text-anchor="middle" font-size="14" fill="#ccfbf1">database opens for business</text>
+<g font-family="JetBrains Mono, Consolas, monospace" font-size="18" fill="#fff">
+  <text x="900" y="240">A = 4000</text><text x="900" y="280">B = 3000</text><text x="900" y="320">C = 100</text>
+</g>
+<text x="1010" y="360" text-anchor="middle" font-size="15" fill="#ccfbf1">tx 736 thrown away</text>
+
+<g stroke="#52525b" stroke-width="2.5" marker-end="url(#a)"><line x1="344" y1="250" x2="392" y2="250"/><line x1="804" y1="250" x2="852" y2="250"/></g>
+<text x="828" y="235" text-anchor="middle" font-size="14" font-weight="700" fill="#52525b">replay</text>
+
+<!-- steps -->
+<rect x="40" y="410" width="1120" height="160" rx="16" fill="#fff" stroke="#e4e4e7"/>
+<g font-size="17" fill="#18181b">
+  <circle cx="72" cy="448" r="15" fill="#18181b"/><text x="72" y="454" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">1</text>
+  <text x="100" y="454">Find the last <tspan font-weight="700">checkpoint</tspan>: everything before it is already in the data files.</text>
+  <circle cx="72" cy="492" r="15" fill="#18181b"/><text x="72" y="498" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">2</text>
+  <text x="100" y="498"><tspan font-weight="700">Redo:</tspan> re-apply every WAL record after the checkpoint to the data files.</text>
+  <circle cx="72" cy="536" r="15" fill="#18181b"/><text x="72" y="542" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">3</text>
+  <text x="100" y="542"><tspan font-weight="700">Discard</tspan> transactions with no COMMIT record (tx 736). Committed ones (tx 735) stay.</text>
+</g>
+</svg>

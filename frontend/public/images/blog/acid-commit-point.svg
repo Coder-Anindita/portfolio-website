@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs>
+  <pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern>
+  <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#52525b"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">The commit point: one moment decides everything</text>
+<text x="40" y="82" font-size="16" fill="#71717a">The instant the COMMIT record is safely on disk in the WAL, the transaction is durable.</text>
+
+<!-- zones -->
+<rect x="40" y="110" width="660" height="300" rx="16" fill="#fff1f2"/>
+<rect x="700" y="110" width="460" height="300" rx="16" fill="#f0fdfa"/>
+<rect x="690" y="110" width="20" height="300" fill="#fff1f2"/><rect x="700" y="110" width="20" height="300" fill="#f0fdfa"/>
+
+<!-- timeline -->
+<line x1="60" y1="260" x2="1140" y2="260" stroke="#52525b" stroke-width="3" marker-end="url(#a)"/>
+<g font-size="15" text-anchor="middle" fill="#18181b">
+  <circle cx="110" cy="260" r="8" fill="#52525b"/><text x="110" y="232" font-family="JetBrains Mono, Consolas, monospace">BEGIN</text>
+  <circle cx="240" cy="260" r="8" fill="#52525b"/><text x="240" y="232" font-family="JetBrains Mono, Consolas, monospace">UPDATE A</text>
+  <circle cx="380" cy="260" r="8" fill="#52525b"/><text x="380" y="232" font-family="JetBrains Mono, Consolas, monospace">UPDATE B</text>
+  <circle cx="540" cy="260" r="8" fill="#52525b"/><text x="540" y="232" font-family="JetBrains Mono, Consolas, monospace">COMMIT</text>
+  <text x="540" y="292" font-size="13" fill="#71717a">record written,</text><text x="540" y="310" font-size="13" fill="#71717a">fsync running…</text>
+  <text x="840" y="232" font-family="JetBrains Mono, Consolas, monospace">"COMMIT OK" ✅</text>
+  <circle cx="840" cy="260" r="8" fill="#0f766e"/>
+  <text x="1030" y="232">checkpoint</text><text x="1030" y="292" font-size="13" fill="#71717a">data files updated</text><text x="1030" y="310" font-size="13" fill="#71717a">(later, in background)</text>
+  <circle cx="1030" cy="260" r="8" fill="#52525b"/>
+</g>
+
+<!-- commit point -->
+<line x1="700" y1="125" x2="700" y2="395" stroke="#0f766e" stroke-width="4"/>
+<rect x="590" y="132" width="220" height="44" rx="22" fill="#0f766e"/>
+<text x="700" y="160" text-anchor="middle" font-size="17" font-weight="800" fill="#fff">⭐ COMMIT POINT</text>
+<text x="712" y="290" font-size="13" fill="#0f766e" font-weight="700">fsync</text><text x="712" y="308" font-size="13" fill="#0f766e" font-weight="700">returns</text>
+
+<!-- outcomes -->
+<g font-size="17">
+  <text x="70" y="360" font-weight="700" fill="#e11d48">💥 Crash anywhere here</text>
+  <text x="70" y="388" fill="#18181b">→ transaction is rolled back. The user never got "OK".</text>
+  <text x="730" y="360" font-weight="700" fill="#0f766e">💥 Crash anywhere here</text>
+  <text x="730" y="388" fill="#18181b">→ WAL is replayed. The transfer is there.</text>
+</g>
+
+<rect x="40" y="440" width="1120" height="90" rx="14" fill="#18181b"/>
+<text x="600" y="478" text-anchor="middle" font-size="20" font-weight="700" fill="#fff">There is no third case. Either "OK" was never sent, or the WAL has the commit.</text>
+<text x="600" y="508" text-anchor="middle" font-size="16" fill="#a1a1aa">That's why "if the WAL is safe, the data is safe".</text>
+</svg>
