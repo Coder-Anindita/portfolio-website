@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs><pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern></defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="600" y="58" text-anchor="middle" font-size="28" font-weight="700" fill="#18181b">LangChain = LEGO for LLM apps</text>
+
+<!-- column panels -->
+<g fill="#fff" stroke="#d6d3d1" stroke-width="2">
+  <rect x="20" y="100" width="200" height="390" rx="16"/><rect x="260" y="100" width="200" height="390" rx="16"/>
+  <rect x="500" y="100" width="200" height="390" rx="16"/><rect x="740" y="100" width="200" height="390" rx="16"/>
+  <rect x="980" y="100" width="200" height="390" rx="16" fill="#f0fdfa" stroke="#0f766e"/>
+</g>
+<g text-anchor="middle" font-size="19" font-weight="700" fill="#18181b">
+  <text x="120" y="150">📥 Loader</text><text x="360" y="150">✂️ Splitter</text><text x="600" y="150">🔢 Embeddings</text>
+  <text x="840" y="150">🗄️ Vector store</text><text x="1080" y="150">🧠 LLM</text>
+</g>
+<g fill="none" stroke="#0f766e" stroke-width="4">
+  <rect x="222" y="138" width="22" height="14" rx="7"/><rect x="236" y="138" width="22" height="14" rx="7"/>
+  <rect x="462" y="138" width="22" height="14" rx="7"/><rect x="476" y="138" width="22" height="14" rx="7"/>
+  <rect x="702" y="138" width="22" height="14" rx="7"/><rect x="716" y="138" width="22" height="14" rx="7"/>
+  <rect x="942" y="138" width="22" height="14" rx="7"/><rect x="956" y="138" width="22" height="14" rx="7"/>
+</g>
+
+<!-- chips -->
+<g fill="#fafaf9" stroke="#e7e5e4">
+  <rect x="35" y="200" width="170" height="44" rx="10"/><rect x="35" y="258" width="170" height="44" rx="10"/><rect x="35" y="316" width="170" height="44" rx="10"/>
+  <rect x="275" y="200" width="170" height="44" rx="10"/><rect x="275" y="258" width="170" height="44" rx="10"/><rect x="275" y="316" width="170" height="44" rx="10"/>
+  <rect x="515" y="200" width="170" height="44" rx="10"/><rect x="515" y="258" width="170" height="44" rx="10"/><rect x="515" y="316" width="170" height="44" rx="10"/>
+  <rect x="755" y="200" width="170" height="44" rx="10"/><rect x="755" y="258" width="170" height="44" rx="10"/><rect x="755" y="316" width="170" height="44" rx="10"/>
+  <rect x="995" y="200" width="170" height="44" rx="10"/><rect x="995" y="258" width="170" height="44" rx="10"/><rect x="995" y="316" width="170" height="44" rx="10"/><rect x="995" y="374" width="170" height="44" rx="10"/>
+</g>
+<g text-anchor="middle" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#3f3f46">
+  <text x="120" y="227">PyPDFLoader</text><text x="120" y="285">WebBaseLoader</text><text x="120" y="343">CSVLoader</text>
+  <text x="360" y="227">Recursive</text><text x="360" y="285">Token</text><text x="360" y="343">MarkdownHeader</text>
+  <text x="600" y="227">OpenAI</text><text x="600" y="285">HuggingFace</text><text x="600" y="343">Google</text>
+  <text x="840" y="227">FAISS</text><text x="840" y="285">Chroma</text><text x="840" y="343">Pinecone</text>
+  <text x="1080" y="227">GPT</text><text x="1080" y="285">Gemini</text><text x="1080" y="343">Claude</text><text x="1080" y="401">Llama</text>
+</g>
+
+<!-- selected pieces -->
+<g fill="none" stroke="#0f766e" stroke-width="3">
+  <rect x="35" y="200" width="170" height="44" rx="10"/><rect x="275" y="200" width="170" height="44" rx="10"/>
+  <rect x="515" y="200" width="170" height="44" rx="10"/><rect x="755" y="200" width="170" height="44" rx="10"/>
+  <rect x="995" y="200" width="170" height="44" rx="10">
+    <animateTransform attributeName="transform" type="translate" values="0 0;0 58;0 116;0 174" calcMode="discrete" dur="4s" repeatCount="indefinite"/>
+  </rect>
+</g>
+<text x="1080" y="460" text-anchor="middle" font-size="13" font-style="italic" fill="#0f766e">swapping live…</text>
+
+<text x="600" y="545" text-anchor="middle" font-size="20" fill="#3f3f46">Swap any block. The rest of your code doesn't even notice.</text>
+</svg>

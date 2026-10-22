@@ -1,0 +1,316 @@
+---
+title: "I Tried to Make a PDF Talk Back — and Accidentally Learned LangChain"
+description: "What LangChain is, why it exists, and how semantic search, embeddings and vector databases fit together, explained with a math teacher, a cricket question and a laptop on fire."
+date: "2026-10-22"
+image: "/images/blog/langchain-cover.svg"
+tags:
+  - LangChain
+  - Generative AI
+  - LLM
+  - RAG
+---
+
+Picture this: it's 2 AM, your exam is in seven hours, and your physics textbook is a 600-page PDF. You don't want to *read* it. You want to **ask it questions**, like texting a friend who has read the whole thing.
+
+"What's Newton's second law?"
+"Explain the derivation on page 142 like I'm five."
+"Give me 3 practice questions from chapter 4."
+
+That's a simple LLM-powered app. Building one is how I ended up understanding **LangChain**, so let's build it together (on paper) and see why LangChain exists.
+
+![LangChain chains together a PDF, chunks, vectors and an LLM](/images/blog/langchain-cover.svg)
+
+## So… what *is* LangChain?
+
+The textbook definition:
+
+> **LangChain is an open-source framework for building applications powered by Large Language Models (LLMs).**
+
+My version: an LLM on its own is a brilliant brain in a jar. It can't read your files, it can't search a database, and it forgets you the moment the chat ends. LangChain is the **body, hands and nervous system** you build around that brain.
+
+### Which languages can I use it with?
+
+| Language | Support |
+| --- | --- |
+| 🐍 Python | ✅ Official, and the most popular |
+| 🟨 JavaScript / TypeScript | ✅ Official (LangChain.js) |
+| ☕ Java | ⚠️ Not official, but **LangChain4j** is a solid community project |
+| 🐘 PHP | ⚠️ Community ports only |
+
+If you're starting out, use **Python**. Most tutorials, docs and Stack Overflow answers assume it.
+
+## Why do we even need a framework?
+
+You need a framework when something has lots of moving parts, so let's design our app and count them.
+
+Meet **PDFBuddy** 📚: you upload a PDF, ask a question, and get an answer based on that PDF.
+
+![High-level design of a chat-with-your-PDF app](/images/blog/langchain-pdf-app-simple.svg "The 10,000-ft view of PDFBuddy")
+
+Here's the flow:
+
+1. The **user asks a question.**
+2. A **semantic search** runs over the PDF (stored in a database) and pulls out the **relevant pages only**.
+3. We build a **system query** = relevant pages + the user's question.
+4. That goes to the **Brain** 🧠.
+5. The Brain writes the **final answer**.
+
+### What does "the Brain" need to be good at?
+
+Two things:
+
+- **Natural Language Understanding (NLU):** it has to *get* what you mean, even with typos, slang or vague phrasing. "wat is f=ma thing" should still work.
+- **Context-aware text generation:** it has to write an answer **based on the pages we gave it**, not on whatever it half-remembers from the internet.
+
+If you're thinking "that's just an LLM", you're right. Hold that thought.
+
+## "Why not just send the whole PDF to the LLM?"
+
+Fair question. Why bother with a semantic search step? Why not send all 600 pages and let the LLM figure it out?
+
+Think about how you ask your math teacher for help:
+
+![Meme: dropping the whole textbook vs pointing at page 142](/images/blog/langchain-meme-math-teacher.svg "We all know which student gets help faster.")
+
+You don't hand over the whole book and say "somewhere in here I'm confused." You say *"Page 142, question 3, this step."* Your teacher reads one paragraph and answers in two minutes.
+
+LLMs work the same way. Here's why semantic search wins:
+
+- 💸 **Cost:** LLM APIs charge per token. Sending 600 pages per question means paying to process 600 pages every time someone asks something.
+- 📏 **Context limits:** every model has a maximum input size (the *context window*). Large documents, or ten of them, may simply not fit.
+- 🎯 **Accuracy:** with too much text, models can lose the important detail. Less noise gives sharper answers.
+- ⚡ **Speed:** less input means faster responses.
+- 📈 **Scale:** semantic search works the same for 1 PDF or 10,000 PDFs. "Send everything" doesn't.
+
+## Semantic search, explained with cricket and biryani 🏏🍛
+
+Old-school **keyword search** matches words. Ask "Who is a great cricketer?" and it looks for the literal words *great* and *cricketer*.
+
+Now suppose your document says *"Virat is a batting legend."* There's no keyword match, so keyword search comes back empty.
+
+**Semantic search** matches **meaning**. It knows "batting legend" and "great cricketer" are about the same idea. Here's how.
+
+### Step 1: Turn text into numbers (embeddings)
+
+An **embedding model** reads a piece of text and turns it into a list of numbers, called a **vector**, that represents its *meaning*.
+
+```text
+"Virat is a batting legend"     →  [0.90, 0.90, 0.00]
+"Messi's stunning free kick"    →  [0.90, 0.10, 0.00]
+"Biryani recipe"                →  [0.00, 0.00, 0.95]
+"Who is a great cricketer?"     →  [0.80, 0.85, 0.05]
+```
+
+### Step 2: What's a vector? What are dimensions?
+
+A **vector** is just an arrow pointing somewhere in space, written as a list of numbers.
+
+Each number is a **dimension**. In my toy example there are 3 dimensions, and you can pretend they mean something like:
+
+- dimension 1 → how "sports-y" is this?
+- dimension 2 → how "cricket-y" is this?
+- dimension 3 → how "food-y" is this?
+
+Real embedding models use far more dimensions: 384, 768, 1536, sometimes 3072. Those dimensions don't have neat human labels. They're patterns the model learned from huge amounts of text. The idea is the same, though: **every number captures some aspect of meaning.**
+
+### Step 3: How are they placed in space?
+
+Each vector is a point in that space, and **similar meanings end up close together**. Cricket sentences cluster together, food sentences cluster somewhere else, and tech sentences are off in their own corner.
+
+![Animated: the query lands near cricket sentences and gets the highest similarity](/images/blog/langchain-embedding-space.svg "Watch the query land right next to Virat 🏏")
+
+### Step 4: What is "similarity" and how do we measure it?
+
+Similarity is how close two meanings are. The most common way to measure it is **cosine similarity**, which compares the *angle* between two arrows:
+
+- arrows point the same way → angle ≈ 0° → similarity ≈ **1** (same meaning)
+- arrows are perpendicular → similarity ≈ **0** (unrelated)
+
+The formula looks scarier than it is:
+
+```text
+cosine_similarity(A, B) = (A · B) / (|A| × |B|)
+```
+
+That's "multiply matching numbers and add them up, then divide by the lengths of both arrows." Plugging in our toy vectors:
+
+| Chunk | Similarity to "Who is a great cricketer?" |
+| --- | --- |
+| 🏏 Virat is a batting legend | **0.99** 🥇 |
+| ⚽ Messi's stunning free kick | 0.76 (it's sports, but not cricket) |
+| 🍛 Biryani recipe | 0.04 (not even close) |
+
+The Virat chunk wins, and **that** is what goes to the LLM. Not the whole PDF, just the best-matching pieces.
+
+<Callout type="tip" title="Mental model">
+  Embeddings are like GPS coordinates for meaning. Semantic search is asking "what's nearest to me?"
+</Callout>
+
+## The full picture
+
+Here's the detailed architecture of PDFBuddy:
+
+![Detailed RAG architecture: ingestion, query, and answer flows](/images/blog/langchain-rag-architecture.svg "Data flows left to right, then back to the user")
+
+**① Ingestion** happens once, when the PDF is uploaded:
+
+1. **PDF upload:** the user drops a file in.
+2. **AWS S3:** we store the raw file safely in the cloud.
+3. **Document loader:** extracts plain text from the PDF.
+4. **Text splitter:** cuts the text into small, overlapping **chunks** (say, about one paragraph each).
+5. **Embedding model:** turns every chunk into a vector.
+6. **Vector database:** stores all those vectors so they're fast to search.
+
+**② Query** happens every time someone asks a question:
+
+7. **User query** comes in.
+8. The query goes through the **same embedding model**. This matters: you can't compare GPS coordinates with postcodes.
+9. **Semantic search** finds the closest chunks in the vector DB.
+
+**③ Answer:**
+
+10. **System query** = top chunks + the user's question.
+11. **The Brain (LLM)** reads it and writes an answer.
+12. **Final answer** goes back to the user, based on *their* PDF.
+
+<Callout type="info">
+  This pattern has a name: **RAG (Retrieval-Augmented Generation)**. Retrieve the right context, then let the LLM generate an answer from it.
+</Callout>
+
+That's the design. Now let's look at what makes it hard to build.
+
+## Challenge #1: The Brain is HEAVY 🏋️
+
+We need an LLM. There are three options:
+
+- **Build your own:** needs a research lab, mountains of data and millions of dollars. Next.
+- **Open-source models** (Llama, Mistral, etc.): free to download, but you have to host them yourself.
+- **Paid APIs** (OpenAI, Google Gemini, Anthropic Claude): someone else hosts them.
+
+So what does "heavy" mean? An LLM is basically billions of numbers (parameters). A 70-billion-parameter model at 16-bit precision is about **140 GB of weights**, and those have to sit in GPU memory just to answer one question. That means several expensive data-center GPUs, plus the electricity, cooling and engineers to keep them running.
+
+![Meme: laptop on fire vs calling an LLM API](/images/blog/langchain-meme-laptop.svg "RIP to every laptop that tried.")
+
+That's why companies like OpenAI and Google host these models on their own servers and give you an **API**. You send text and get text back. They handle the GPUs. Problem #1 solved.
+
+## Challenge #2: Orchestrating all the moving parts 🎻
+
+Count the components in our diagram: **loader, splitter, embedding model, vector DB, retriever, LLM**, plus all the code that connects them. Every one of these comes from a different vendor with a different SDK.
+
+Here's what usually happens. You write the whole app using Gemini's SDK, it works, and you're happy. Then:
+
+![Meme: switching LLM provider without and with LangChain](/images/blog/langchain-meme-switch-provider.svg "Based on a true story. Probably yours.")
+
+Without a framework, switching providers means rewriting code, because every SDK is shaped differently:
+
+```python title="without_langchain.py"
+# Gemini version
+from google import genai
+client = genai.Client()
+reply = client.models.generate_content(model="gemini-2.5-flash", contents=question)
+answer = reply.text
+
+# OpenAI version: different import, different call, different response shape
+from openai import OpenAI
+client = OpenAI()
+reply = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": question}],
+)
+answer = reply.choices[0].message.content
+```
+
+Now multiply that by every component in your pipeline. 😵
+
+## Enter LangChain: plug and play 🔌
+
+LangChain gives every component a **common interface**. A loader is a loader and an LLM is an LLM, whoever made them. To swap one, you change **one line**:
+
+```python title="with_langchain.py" {3}
+from langchain.chat_models import init_chat_model
+
+llm = init_chat_model("openai:gpt-4o-mini")   # was "google_genai:gemini-2.5-flash"
+answer = llm.invoke(question).content
+```
+
+![LangChain components as swappable building blocks](/images/blog/langchain-plug-and-play.svg)
+
+And the whole ingestion pipeline from our architecture fits in a few lines:
+
+```python title="ingest.py"
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_openai import OpenAIEmbeddings
+from langchain_community.vectorstores import FAISS
+
+docs = PyPDFLoader("physics.pdf").load()                      # loader
+chunks = RecursiveCharacterTextSplitter(
+    chunk_size=1000, chunk_overlap=200
+).split_documents(docs)                                       # splitter
+db = FAISS.from_documents(chunks, OpenAIEmbeddings())         # embeddings + vector DB
+
+relevant = db.similarity_search("What is Newton's second law?", k=3)  # semantic search
+```
+
+Want Chroma instead of FAISS? Hugging Face embeddings instead of OpenAI? Change the import and that line.
+
+## LangChain's other superpowers ⚡
+
+**1. Chains: pipelines where output becomes input automatically.** This is where the name comes from. Join steps with `|` and data flows through them:
+
+```python
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+prompt = ChatPromptTemplate.from_template(
+    "Answer using only this context:\n{context}\n\nQuestion: {question}"
+)
+chain = prompt | llm | StrOutputParser()
+
+chain.invoke({"context": relevant, "question": "What is Newton's second law?"})
+```
+
+Prompt → LLM → clean string, with no glue code. You can build long, branching workflows the same way.
+
+**2. Model-agnostic development.** Write your app once and pick the best or cheapest model later. You aren't locked into one vendor.
+
+**3. A complete ecosystem.** Hundreds of integrations: loaders for PDFs, websites, Notion and CSVs; many splitting strategies; most major vector databases; and the big LLM providers.
+
+**4. Memory and state handling.** LLMs are stateless and forget everything between calls. LangChain gives you tools to keep conversation history, so when the user asks "explain *that* again", the app knows what "that" is.
+
+## What can you build with it? 🛠️
+
+- 💬 **Conversational chatbots** that remember the conversation
+- 🤖 **AI agents** that decide which tools to call (search, calculator, APIs) to finish a task
+- 📚 **AI knowledge assistants**, like PDFBuddy for your company's internal docs
+- ⚙️ **Workflow automation:** read emails, pull out key details, update a sheet, draft a reply
+- 📝 **Summarization and research helpers:** turn a 50-page report into a 5-bullet brief
+
+## Is LangChain the only option?
+
+No. Two popular alternatives:
+
+| Framework | Best known for |
+| --- | --- |
+| 🦙 **LlamaIndex** | Data-heavy apps: indexing and retrieval over your documents |
+| 🌾 **Haystack** | Production-ready search and question-answering pipelines |
+
+All three can build PDFBuddy. LangChain is usually the go-to for its huge ecosystem and its flexibility across agents, chains and RAG.
+
+## TL;DR 🧾
+
+- **LangChain** is an open-source framework for building LLM-powered apps (Python and JS officially).
+- A real LLM app has many moving parts: **loader → splitter → embeddings → vector DB → retriever → LLM**.
+- **Semantic search** sends only the relevant chunks to the LLM. That's cheaper, faster and more accurate, like asking your teacher about one page instead of the whole book.
+- **Embeddings** are vectors that capture meaning; **cosine similarity** measures how close two meanings are.
+- LangChain makes every component **plug and play**, so switching providers is a one-line change, and **chains** connect it all into a pipeline.
+
+Next time someone says "I built a chat-with-your-PDF app," you'll know what's going on behind it. 😎
+
+## Credits 🙏
+
+These notes were built while watching this video. Go give it a watch:
+
+<YouTube id="nlz9j-r0U9U" title="Introduction to LangChain" />
+
+**📺 [Watch it on YouTube](https://youtu.be/nlz9j-r0U9U)**

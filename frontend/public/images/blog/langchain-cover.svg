@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs><pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern></defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="600" y="140" text-anchor="middle" font-size="22" font-weight="600" letter-spacing="4" fill="#0f766e">LANGCHAIN, WITHOUT THE JARGON</text>
+<text x="600" y="220" text-anchor="middle" font-size="64" font-weight="700" fill="#18181b">Make your PDF talk back</text>
+
+<g>
+  <rect x="65" y="330" width="200" height="170" rx="18" fill="#fff" stroke="#d6d3d1" stroke-width="2"/>
+  <text x="165" y="402" text-anchor="middle" font-size="54">📄</text>
+  <text x="165" y="456" text-anchor="middle" font-size="24" font-weight="600" fill="#18181b">Your PDF</text>
+  <text x="165" y="484" text-anchor="middle" font-family="JetBrains Mono, Consolas, monospace" font-size="16" fill="#71717a">600 pages</text>
+
+  <rect x="355" y="330" width="200" height="170" rx="18" fill="#fff" stroke="#d6d3d1" stroke-width="2"/>
+  <text x="455" y="402" text-anchor="middle" font-size="54">✂️</text>
+  <text x="455" y="456" text-anchor="middle" font-size="24" font-weight="600" fill="#18181b">Chunks</text>
+  <text x="455" y="484" text-anchor="middle" font-family="JetBrains Mono, Consolas, monospace" font-size="16" fill="#71717a">text splitter</text>
+
+  <rect x="645" y="330" width="200" height="170" rx="18" fill="#fff" stroke="#d6d3d1" stroke-width="2"/>
+  <text x="745" y="402" text-anchor="middle" font-size="54">🔢</text>
+  <text x="745" y="456" text-anchor="middle" font-size="24" font-weight="600" fill="#18181b">Vectors</text>
+  <text x="745" y="484" text-anchor="middle" font-family="JetBrains Mono, Consolas, monospace" font-size="16" fill="#71717a">embeddings</text>
+
+  <rect x="935" y="330" width="200" height="170" rx="18" fill="#f0fdfa" stroke="#0f766e" stroke-width="2"/>
+  <text x="1035" y="402" text-anchor="middle" font-size="54">🧠</text>
+  <text x="1035" y="456" text-anchor="middle" font-size="24" font-weight="600" fill="#18181b">LLM</text>
+  <text x="1035" y="484" text-anchor="middle" font-family="JetBrains Mono, Consolas, monospace" font-size="16" fill="#71717a">the brain</text>
+</g>
+
+<g fill="none" stroke="#0f766e" stroke-width="5">
+  <rect x="272" y="404" width="46" height="22" rx="11"/><rect x="302" y="404" width="46" height="22" rx="11"/>
+  <rect x="562" y="404" width="46" height="22" rx="11"/><rect x="592" y="404" width="46" height="22" rx="11"/>
+  <rect x="852" y="404" width="46" height="22" rx="11"/><rect x="882" y="404" width="46" height="22" rx="11"/>
+</g>
+
+<text x="600" y="590" text-anchor="middle" font-family="JetBrains Mono, Consolas, monospace" font-size="22" fill="#0f766e">load → split → embed → search → answer</text>
+</svg>
