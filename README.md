@@ -8,6 +8,7 @@ My personal portfolio and technical blog. It covers my education, experience, sk
 - **MDX blog:** write posts as `.mdx` files. Each post gets its own page with reading time, tags, a table of contents and SEO metadata.
 - **Rich technical writing:** syntax-highlighted code blocks (with file titles, line highlights and line numbers), tables, callouts, images, YouTube and video embeds.
 - **Blog search and tag filters**, kept in the URL so filtered views can be shared.
+- **View counts and likes** on every post, stored in Upstash Redis through Vercel serverless functions.
 - **Working contact form** powered by EmailJS.
 - **Content kept in data files:** personal details, projects and skills live in `src/data/`, so updating them needs no component changes.
 - Responsive, accessible layout with scroll reveal animations.
@@ -19,6 +20,7 @@ My personal portfolio and technical blog. It covers my education, experience, sk
 | Frontend | React 19, Vite, React Router, Tailwind CSS v4 |
 | Blog | MDX, remark-gfm, rehype-pretty-code (Shiki), rehype-slug |
 | Contact | EmailJS |
+| Views & likes | Vercel Functions, Upstash Redis |
 | Backend | Node.js, Express 5 |
 | Tooling | oxlint |
 
@@ -27,6 +29,7 @@ My personal portfolio and technical blog. It covers my education, experience, sk
 ```
 .
 ├── frontend/                 # React + Vite site
+│   ├── api/                  # Vercel functions for blog views and likes
 │   ├── public/               # Static files (images, OG image)
 │   ├── plugins/blog-meta.js  # Vite plugin that loads post metadata for listings
 │   └── src/
@@ -81,6 +84,9 @@ The backend has a health check and a contact endpoint that validates and logs su
 | `VITE_EMAILJS_TEMPLATE_ID` | EmailJS template ID |
 | `VITE_EMAILJS_PUBLIC_KEY` | EmailJS public key |
 | `VITE_SITE_URL` | Public URL of the site, used for canonical and Open Graph links |
+| `UPSTASH_REDIS_REST_URL` | Upstash Redis REST URL, for views and likes (server-side only) |
+| `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis REST token (server-side only) |
+| `STATS_SALT` | Optional random string used to hash visitor IPs |
 
 **backend/.env**
 
@@ -111,6 +117,16 @@ The backend has a health check and a contact endpoint that validates and logs su
 The post appears on the home page and on `/blogs` automatically. Set `draft: true` to hide a post from production builds. For a full example of every formatting feature, see `frontend/src/content/blog-templates/how-to-write-a-blog-post.mdx`.
 
 More details on editing content are in [frontend/README.md](frontend/README.md).
+
+## Views and likes
+
+Each post shows its view and like counts on the blog cards and the post page, and readers can like a post at the end of the article.
+
+- `GET /api/stats?slugs=a,b` returns counts for several posts. `POST /api/view` records a view. `POST /api/like` likes or unlikes a post.
+- A view counts once per visitor per post per day, and each visitor can like a post once. Visitors are identified by a salted hash of their IP address, so no raw IPs are stored.
+- If the API is unreachable or Redis isn't configured, the counts and the like button are hidden and the rest of the site works as usual.
+
+**Setup:** on Vercel, open the project's **Storage** tab, add an **Upstash Redis** database and connect it to the project; that adds the environment variables. Then redeploy. To run the API locally, put the same variables in `frontend/.env` and run `npx vercel dev` from `frontend/` instead of `npm run dev`.
 
 ## Deployment
 

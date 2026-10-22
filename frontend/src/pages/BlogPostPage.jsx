@@ -2,9 +2,11 @@ import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { Suspense, useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { PostMeta } from '../components/blog/BlogCard.jsx'
+import LikeButton from '../components/blog/LikeButton.jsx'
 import TableOfContents from '../components/blog/TableOfContents.jsx'
 import Badge from '../components/ui/Badge.jsx'
 import Seo from '../components/ui/Seo.jsx'
+import { usePostEngagement } from '../hooks/usePostStats.js'
 import { getAdjacentPosts, getPost, getPostComponent } from '../lib/blog.js'
 import NotFoundPage from './NotFoundPage.jsx'
 
@@ -55,6 +57,7 @@ export default function BlogPostPage() {
   const Content = getPostComponent(slug)
   const articleRef = useRef(null)
   const [headings, setHeadings] = useState([])
+  const { stats, toggleLike, pending } = usePostEngagement(slug)
 
   if (!post || !Content) return <NotFoundPage />
 
@@ -102,7 +105,7 @@ export default function BlogPostPage() {
                 {post.title}
               </h1>
               {post.description && <p className="mt-5 text-lg leading-relaxed text-muted md:text-xl">{post.description}</p>}
-              <PostMeta post={post} className="mt-6 border-b border-line pb-8" />
+              <PostMeta post={post} stats={stats} className="mt-6 border-b border-line pb-8" />
             </header>
 
             {post.image && (
@@ -134,6 +137,13 @@ export default function BlogPostPage() {
                 <HeadingCollector key={slug} articleRef={articleRef} onCollect={setHeadings} />
               </Suspense>
             </div>
+
+            {stats && (
+              <div className="mt-14 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-white px-6 py-5">
+                <p className="text-sm text-muted">{stats.liked ? 'Thanks for the like!' : 'Found this useful? Leave a like.'}</p>
+                <LikeButton stats={stats} onToggle={toggleLike} pending={pending} />
+              </div>
+            )}
 
             <nav aria-label="More articles" className="mt-16 grid gap-4 border-t border-line pt-10 sm:grid-cols-2">
               <AdjacentLink post={older} direction="older" />

@@ -1,10 +1,12 @@
-import { Calendar, Clock } from 'lucide-react'
+import { Calendar, Clock, Eye, Heart } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { formatDate } from '../../lib/blog.js'
+import { formatCount } from '../../lib/stats.js'
 import Badge from '../ui/Badge.jsx'
 import Reveal from '../ui/Reveal.jsx'
 
-export function PostMeta({ post, className = '' }) {
+// `stats` ({ views, likes }) is optional; the counts are hidden when it is missing.
+export function PostMeta({ post, stats, className = '' }) {
   return (
     <p className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-subtle ${className}`}>
       {post.date && (
@@ -17,11 +19,23 @@ export function PostMeta({ post, className = '' }) {
         <Clock size={14} aria-hidden="true" />
         {post.readingTime} min read
       </span>
+      {stats && (
+        <>
+          <span className="inline-flex items-center gap-1.5" title={`${stats.views} views`}>
+            <Eye size={14} aria-hidden="true" />
+            {formatCount(stats.views)} {stats.views === 1 ? 'view' : 'views'}
+          </span>
+          <span className="inline-flex items-center gap-1.5" title={`${stats.likes} likes`}>
+            <Heart size={14} aria-hidden="true" />
+            {formatCount(stats.likes)} {stats.likes === 1 ? 'like' : 'likes'}
+          </span>
+        </>
+      )}
     </p>
   )
 }
 
-export default function BlogCard({ post, delay = 0 }) {
+export default function BlogCard({ post, stats, delay = 0 }) {
   return (
     <Reveal as="article" delay={delay} className="group relative flex flex-col overflow-hidden rounded-2xl border border-line bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
       {post.image && (
@@ -36,7 +50,7 @@ export default function BlogCard({ post, delay = 0 }) {
         </div>
       )}
       <div className="flex flex-1 flex-col p-6">
-        <PostMeta post={post} className="text-xs" />
+        <PostMeta post={post} stats={stats} className="text-xs" />
         <h3 className="mt-3 text-lg leading-snug font-semibold text-ink transition-colors group-hover:text-accent">
           {/* The stretched link makes the whole card clickable while keeping one focus target. */}
           <Link to={`/blogs/${post.slug}`} className="after:absolute after:inset-0 after:content-['']">

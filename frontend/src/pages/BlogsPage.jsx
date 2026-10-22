@@ -5,13 +5,18 @@ import BlogCard from '../components/blog/BlogCard.jsx'
 import ComingSoon from '../components/blog/ComingSoon.jsx'
 import Seo from '../components/ui/Seo.jsx'
 import { pageMeta } from '../data/seo.js'
+import { usePostStats } from '../hooks/usePostStats.js'
 import { allTags, posts } from '../lib/blog.js'
+
+const allSlugs = posts.map((post) => post.slug)
 
 export default function BlogsPage() {
   // Search and tag live in the URL (?q=react&tag=JavaScript) so filtered views are shareable.
   const [params, setParams] = useSearchParams()
   const query = params.get('q') || ''
   const activeTag = params.get('tag') || ''
+  // Fetched for every post up front so filtering doesn't trigger new requests.
+  const stats = usePostStats(allSlugs)
 
   function update(key, value) {
     const next = new URLSearchParams(params)
@@ -95,7 +100,7 @@ export default function BlogsPage() {
             {filtered.length > 0 ? (
               <div className="mt-4 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {filtered.map((post, index) => (
-                  <BlogCard key={post.slug} post={post} delay={(index % 3) * 80} />
+                  <BlogCard key={post.slug} post={post} stats={stats[post.slug]} delay={(index % 3) * 80} />
                 ))}
               </div>
             ) : (
