@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs><pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern></defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">Isolation levels vs the problems they stop</text>
+<text x="40" y="82" font-size="16" fill="#71717a">✅ prevented   ❌ can happen   ⚠️ depends on the database</text>
+
+<!-- header -->
+<g font-size="17" font-weight="700" fill="#18181b" text-anchor="middle">
+  <text x="545" y="140">Dirty read</text>
+  <text x="690" y="140">Non-repeatable</text>
+  <text x="835" y="140">Phantom</text>
+  <text x="975" y="140">Lost update</text>
+  <text x="1105" y="140">Write skew</text>
+</g>
+
+<g font-size="19">
+  <rect x="40" y="160" width="1120" height="80" rx="12" fill="#fff1f2"/>
+  <text x="65" y="195" font-weight="700" fill="#18181b">Read Uncommitted</text><text x="65" y="222" font-size="15" fill="#71717a">fastest, almost no protection</text>
+  <rect x="40" y="250" width="1120" height="80" rx="12" fill="#fffbeb"/>
+  <text x="65" y="285" font-weight="700" fill="#18181b">Read Committed</text><text x="65" y="312" font-size="15" fill="#71717a">default: PostgreSQL, Oracle, SQL Server</text>
+  <rect x="40" y="340" width="1120" height="80" rx="12" fill="#eef2ff"/>
+  <text x="65" y="375" font-weight="700" fill="#18181b">Repeatable Read</text><text x="65" y="402" font-size="15" fill="#71717a">default: MySQL (InnoDB)</text>
+  <rect x="40" y="430" width="1120" height="80" rx="12" fill="#f0fdfa"/>
+  <text x="65" y="465" font-weight="700" fill="#18181b">Serializable</text><text x="65" y="492" font-size="15" fill="#71717a">safest, as if one at a time</text>
+</g>
+
+<g font-size="28" text-anchor="middle">
+  <text x="545" y="210">❌</text><text x="690" y="210">❌</text><text x="835" y="210">❌</text><text x="975" y="210">❌</text><text x="1105" y="210">❌</text>
+  <text x="545" y="300">✅</text><text x="690" y="300">❌</text><text x="835" y="300">❌</text><text x="975" y="300">❌</text><text x="1105" y="300">❌</text>
+  <text x="545" y="390">✅</text><text x="690" y="390">✅</text><text x="835" y="390">⚠️</text><text x="975" y="390">⚠️</text><text x="1105" y="390">❌</text>
+  <text x="545" y="480">✅</text><text x="690" y="480">✅</text><text x="835" y="480">✅</text><text x="975" y="480">✅</text><text x="1105" y="480">✅</text>
+</g>
+
+<g>
+  <line x1="20" y1="170" x2="20" y2="500" stroke="#18181b" stroke-width="3"/>
+  <path d="M12 490 L20 508 L28 490z" fill="#18181b"/>
+</g>
+<text x="40" y="550" font-size="16" fill="#52525b">⬇️ Going down: more correct, but more locking/aborts and less concurrency.</text>
+<text x="40" y="578" font-size="16" fill="#52525b">⚠️ PostgreSQL's Repeatable Read blocks phantoms and lost updates; MySQL's blocks most phantoms but allows lost updates.</text>
+</svg>

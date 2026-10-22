@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs><pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern></defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">Undo log vs Redo log</text>
+<text x="40" y="82" font-size="16" fill="#71717a">For the change  A: ₹5,000 → ₹4,000</text>
+
+<rect x="40" y="110" width="545" height="250" rx="18" fill="#fff" stroke="#fecdd3" stroke-width="2"/>
+<text x="70" y="155" font-size="24" font-weight="700" fill="#e11d48">↩️ Undo log</text>
+<text x="70" y="190" font-size="17" fill="#71717a">remembers the OLD value</text>
+<rect x="70" y="210" width="485" height="50" rx="10" fill="#fff1f2"/>
+<text x="90" y="242" font-family="JetBrains Mono, Consolas, monospace" font-size="19" fill="#18181b">tx 735: A was ₹5,000</text>
+<text x="70" y="295" font-size="18" fill="#18181b"><tspan font-weight="700">Used for:</tspan> rollback — put the old value back</text>
+<text x="70" y="325" font-size="18" fill="#18181b">if the transaction fails or never commits.</text>
+
+<rect x="615" y="110" width="545" height="250" rx="18" fill="#fff" stroke="#99f6e4" stroke-width="2"/>
+<text x="645" y="155" font-size="24" font-weight="700" fill="#0f766e">🔁 Redo log</text>
+<text x="645" y="190" font-size="17" fill="#71717a">remembers the NEW value</text>
+<rect x="645" y="210" width="485" height="50" rx="10" fill="#f0fdfa"/>
+<text x="665" y="242" font-family="JetBrains Mono, Consolas, monospace" font-size="19" fill="#18181b">tx 735: A is now ₹4,000</text>
+<text x="645" y="295" font-size="18" fill="#18181b"><tspan font-weight="700">Used for:</tspan> crash recovery — re-apply changes</text>
+<text x="645" y="325" font-size="18" fill="#18181b">that were committed but not yet in data files.</text>
+
+<!-- recovery -->
+<rect x="40" y="390" width="1120" height="220" rx="18" fill="#18181b"/>
+<text x="70" y="432" font-size="22" font-weight="700" fill="#fff">💥 After a crash, recovery does two passes</text>
+<g font-size="18">
+  <circle cx="88" cy="482" r="18" fill="#0f766e"/><text x="88" y="488" text-anchor="middle" font-weight="700" fill="#fff">1</text>
+  <text x="122" y="478" font-weight="700" fill="#5eead4">REDO everything in the log</text>
+  <text x="122" y="503" fill="#d4d4d8">Bring the data files up to the moment of the crash, committed or not.</text>
+  <circle cx="88" cy="557" r="18" fill="#e11d48"/><text x="88" y="563" text-anchor="middle" font-weight="700" fill="#fff">2</text>
+  <text x="122" y="553" font-weight="700" fill="#fda4af">UNDO transactions that never committed</text>
+  <text x="122" y="578" fill="#d4d4d8">tx 735 had COMMIT → keep it ✅   ·   tx 736 had no COMMIT → roll it back ↩️</text>
+</g>
+</svg>

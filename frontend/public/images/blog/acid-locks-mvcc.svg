@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 660" width="1200" height="660" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs>
+  <pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern>
+  <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#52525b"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">Two ways to keep transactions out of each other's way</text>
+
+<!-- Locks -->
+<rect x="40" y="80" width="545" height="550" rx="18" fill="#fff" stroke="#fde68a" stroke-width="2"/>
+<text x="70" y="125" font-size="24" font-weight="700" fill="#b45309">🔒 Locks</text>
+<text x="70" y="155" font-size="16" fill="#71717a">"Wait your turn."</text>
+
+<rect x="200" y="185" width="220" height="60" rx="12" fill="#18181b"/>
+<text x="310" y="222" text-anchor="middle" font-family="JetBrains Mono, Consolas, monospace" font-size="18" fill="#fff">row A 🔒</text>
+<text x="70" y="290" font-size="17" fill="#18181b"><tspan font-weight="700" fill="#0f766e">T1</tspan> holds an exclusive lock, updating A</text>
+<text x="70" y="320" font-size="17" fill="#18181b"><tspan font-weight="700" fill="#4338ca">T2</tspan> wants A too → ⏳ waits until T1 commits</text>
+
+<text x="70" y="375" font-size="17" font-weight="700" fill="#18181b">Who can share?</text>
+<g font-size="16" text-anchor="middle">
+  <rect x="70" y="390" width="485" height="40" rx="8" fill="#fffbeb"/>
+  <text x="200" y="416" font-weight="700">held \ wanted</text><text x="365" y="416" font-weight="700">Shared (read)</text><text x="480" y="416" font-weight="700">Exclusive</text>
+  <text x="200" y="460">Shared (read)</text><text x="365" y="460">✅</text><text x="480" y="460">❌ wait</text>
+  <text x="200" y="500">Exclusive (write)</text><text x="365" y="500">❌ wait</text><text x="480" y="500">❌ wait</text>
+</g>
+<text x="70" y="555" font-size="16" fill="#52525b">Two-phase locking: grab locks as you go,</text>
+<text x="70" y="578" font-size="16" fill="#52525b">release them all only at COMMIT/ROLLBACK.</text>
+<text x="70" y="608" font-size="16" fill="#b45309" font-weight="600">Risk: waiting, and deadlocks.</text>
+
+<!-- MVCC -->
+<rect x="615" y="80" width="545" height="550" rx="18" fill="#fff" stroke="#c7d2fe" stroke-width="2"/>
+<text x="645" y="125" font-size="24" font-weight="700" fill="#4338ca">📸 MVCC</text>
+<text x="645" y="155" font-size="16" fill="#71717a">"Everyone gets their own snapshot."</text>
+
+<g font-family="JetBrains Mono, Consolas, monospace" font-size="16">
+  <rect x="645" y="185" width="225" height="96" rx="12" fill="#f4f4f5" stroke="#d4d4d8"/>
+  <text x="665" y="215" font-weight="700" fill="#18181b">version 1</text>
+  <text x="665" y="240" fill="#18181b">A = ₹5,000</text>
+  <text x="665" y="265" fill="#71717a">by tx 100</text>
+  <rect x="905" y="185" width="225" height="96" rx="12" fill="#eef2ff" stroke="#a5b4fc"/>
+  <text x="925" y="215" font-weight="700" fill="#18181b">version 2</text>
+  <text x="925" y="240" fill="#18181b">A = ₹4,000</text>
+  <text x="925" y="265" fill="#71717a">by tx 105</text>
+</g>
+<line x1="874" y1="233" x2="898" y2="233" stroke="#52525b" stroke-width="2.5" marker-end="url(#a)"/>
+
+<g font-size="17" fill="#18181b">
+  <text x="645" y="330">👀 Reader started <tspan font-weight="700">before</tspan> tx 105</text>
+  <text x="675" y="355" fill="#52525b">→ sees version 1 (₹5,000)</text>
+  <text x="645" y="395">👀 Reader started <tspan font-weight="700">after</tspan> tx 105 committed</text>
+  <text x="675" y="420" fill="#52525b">→ sees version 2 (₹4,000)</text>
+</g>
+<rect x="645" y="455" width="485" height="80" rx="12" fill="#eef2ff"/>
+<text x="887" y="488" text-anchor="middle" font-size="17" font-weight="700" fill="#4338ca">Readers don't block writers.</text>
+<text x="887" y="515" text-anchor="middle" font-size="17" font-weight="700" fill="#4338ca">Writers don't block readers.</text>
+<text x="645" y="578" font-size="16" fill="#52525b">Two writers on the same row still conflict.</text>
+<text x="645" y="608" font-size="16" fill="#4338ca" font-weight="600">Used by PostgreSQL, MySQL InnoDB, Oracle.</text>
+</svg>

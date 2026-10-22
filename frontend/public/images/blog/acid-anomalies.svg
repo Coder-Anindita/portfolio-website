@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 780" width="1200" height="780" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs><pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern></defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">Four ways concurrent transactions mess with each other</text>
+<text x="40" y="82" font-size="16" fill="#71717a">Read each panel top to bottom. T1 on the left, T2 on the right.</text>
+
+<g font-family="JetBrains Mono, Consolas, monospace" font-size="15" fill="#18181b">
+  <!-- Dirty read -->
+  <rect x="40" y="105" width="550" height="315" rx="16" fill="#fff" stroke="#fecdd3" stroke-width="2"/>
+  <text x="65" y="142" font-family="Inter, Segoe UI, sans-serif" font-size="21" font-weight="700" fill="#e11d48">🫣 Dirty read</text>
+  <text x="65" y="168" font-family="Inter, Segoe UI, sans-serif" font-size="15" fill="#71717a">reading data that was never committed</text>
+  <text x="65" y="205" font-weight="700" fill="#0f766e">T1</text><text x="330" y="205" font-weight="700" fill="#4338ca">T2</text>
+  <text x="65" y="240">balance → 10,00,000</text><text x="65" y="260" fill="#71717a">(not committed)</text>
+  <text x="330" y="295">read balance</text><text x="330" y="315" fill="#e11d48">→ 10,00,000 😍</text>
+  <text x="65" y="350" fill="#e11d48" font-weight="700">ROLLBACK</text>
+  <text x="330" y="390" fill="#e11d48">acted on fake money</text>
+
+  <!-- Non-repeatable read -->
+  <rect x="610" y="105" width="550" height="315" rx="16" fill="#fff" stroke="#fde68a" stroke-width="2"/>
+  <text x="635" y="142" font-family="Inter, Segoe UI, sans-serif" font-size="21" font-weight="700" fill="#b45309">🔄 Non-repeatable read</text>
+  <text x="635" y="168" font-family="Inter, Segoe UI, sans-serif" font-size="15" fill="#71717a">same row, read twice, two different answers</text>
+  <text x="635" y="205" font-weight="700" fill="#0f766e">T1</text><text x="900" y="205" font-weight="700" fill="#4338ca">T2</text>
+  <text x="635" y="240">read price → ₹999</text>
+  <text x="900" y="280">price = ₹1,499</text><text x="900" y="300" font-weight="700">COMMIT</text>
+  <text x="635" y="340">read price → ₹1,499</text>
+  <text x="635" y="390" fill="#b45309">"wait, it was ₹999 a second ago?"</text>
+
+  <!-- Phantom read -->
+  <rect x="40" y="440" width="550" height="315" rx="16" fill="#fff" stroke="#c7d2fe" stroke-width="2"/>
+  <text x="65" y="477" font-family="Inter, Segoe UI, sans-serif" font-size="21" font-weight="700" fill="#4338ca">👻 Phantom read</text>
+  <text x="65" y="503" font-family="Inter, Segoe UI, sans-serif" font-size="15" fill="#71717a">same query, new rows appear (or vanish)</text>
+  <text x="65" y="540" font-weight="700" fill="#0f766e">T1</text><text x="330" y="540" font-weight="700" fill="#4338ca">T2</text>
+  <text x="65" y="575">COUNT(orders today)</text><text x="65" y="595">→ 10</text>
+  <text x="330" y="630">INSERT new order</text><text x="330" y="650" font-weight="700">COMMIT</text>
+  <text x="65" y="685">COUNT(orders today)</text><text x="65" y="705">→ 11 👻</text>
+
+  <!-- Write skew -->
+  <rect x="610" y="440" width="550" height="315" rx="16" fill="#fff" stroke="#99f6e4" stroke-width="2"/>
+  <text x="635" y="477" font-family="Inter, Segoe UI, sans-serif" font-size="21" font-weight="700" fill="#0f766e">🩺 Write skew</text>
+  <text x="635" y="503" font-family="Inter, Segoe UI, sans-serif" font-size="15" fill="#71717a">rule: at least 1 doctor must stay on call</text>
+  <text x="635" y="540" font-weight="700" fill="#0f766e">Dr. Asha</text><text x="900" y="540" font-weight="700" fill="#4338ca">Dr. Ravi</text>
+  <text x="635" y="575">on call? → 2 ✔</text><text x="900" y="575">on call? → 2 ✔</text>
+  <text x="635" y="620">I go off call</text><text x="900" y="620">I go off call</text>
+  <text x="635" y="645" font-weight="700">COMMIT</text><text x="900" y="645" font-weight="700">COMMIT</text>
+  <text x="635" y="690" fill="#e11d48">on call now → 0 😱</text>
+  <text x="635" y="720" fill="#71717a">different rows, so no conflict was detected</text>
+</g>
+</svg>

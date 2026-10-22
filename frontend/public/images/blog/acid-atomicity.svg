@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs><pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern></defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">Atomicity: the same transfer, two endings</text>
+<text x="40" y="82" font-size="16" fill="#71717a">Either every step lands, or the database rewinds to exactly where it started.</text>
+
+<!-- Happy path -->
+<rect x="40" y="110" width="545" height="460" rx="18" fill="#fff" stroke="#99f6e4" stroke-width="2"/>
+<text x="70" y="152" font-size="22" font-weight="700" fill="#0f766e">✅ Happy path</text>
+<g font-family="JetBrains Mono, Consolas, monospace" font-size="19">
+  <g opacity="0.25"><rect x="70" y="180" width="485" height="50" rx="10" fill="#f0fdfa"/><text x="90" y="212" fill="#18181b">BEGIN;</text>
+    <animate attributeName="opacity" values="0.25;0.25;1;1" keyTimes="0;0.05;0.07;1" dur="10s" repeatCount="indefinite"/></g>
+  <g opacity="0.25"><rect x="70" y="242" width="485" height="50" rx="10" fill="#f0fdfa"/><text x="90" y="274" fill="#18181b">A: ₹5,000 → ₹4,000</text>
+    <animate attributeName="opacity" values="0.25;0.25;1;1" keyTimes="0;0.15;0.17;1" dur="10s" repeatCount="indefinite"/></g>
+  <g opacity="0.25"><rect x="70" y="304" width="485" height="50" rx="10" fill="#f0fdfa"/><text x="90" y="336" fill="#18181b">B: ₹2,000 → ₹3,000</text>
+    <animate attributeName="opacity" values="0.25;0.25;1;1" keyTimes="0;0.27;0.29;1" dur="10s" repeatCount="indefinite"/></g>
+  <g opacity="0.25"><rect x="70" y="366" width="485" height="50" rx="10" fill="#0f766e"/><text x="90" y="398" fill="#fff" font-weight="700">COMMIT;  🎉 both changes saved</text>
+    <animate attributeName="opacity" values="0.25;0.25;1;1" keyTimes="0;0.39;0.41;1" dur="10s" repeatCount="indefinite"/></g>
+</g>
+<g opacity="0"><text x="312" y="490" text-anchor="middle" font-size="22" font-weight="700" fill="#0f766e">A ₹4,000 + B ₹3,000 = ₹7,000 ✔</text>
+  <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.43;0.45;1" dur="10s" repeatCount="indefinite"/></g>
+
+<!-- Crash path -->
+<rect x="615" y="110" width="545" height="460" rx="18" fill="#fff" stroke="#fecdd3" stroke-width="2"/>
+<text x="645" y="152" font-size="22" font-weight="700" fill="#e11d48">💥 Crash path</text>
+<g font-family="JetBrains Mono, Consolas, monospace" font-size="19">
+  <g opacity="0.25"><rect x="645" y="180" width="485" height="50" rx="10" fill="#fff1f2"/><text x="665" y="212" fill="#18181b">BEGIN;</text>
+    <animate attributeName="opacity" values="0.25;0.25;1;1" keyTimes="0;0.5;0.52;1" dur="10s" repeatCount="indefinite"/></g>
+  <g opacity="0.25"><rect x="645" y="242" width="485" height="50" rx="10" fill="#fff1f2"/>
+    <text x="665" y="274" fill="#18181b">A: ₹5,000 → ₹4,000<animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.84;0.85;1" dur="10s" repeatCount="indefinite"/></text>
+    <text x="665" y="274" fill="#0f766e" opacity="0">A: back to ₹5,000 ↩️<animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.84;0.85;1" dur="10s" repeatCount="indefinite"/></text>
+    <animate attributeName="opacity" values="0.25;0.25;1;1" keyTimes="0;0.6;0.62;1" dur="10s" repeatCount="indefinite"/></g>
+  <g opacity="0.25"><rect x="645" y="304" width="485" height="50" rx="10" fill="#e11d48"/><text x="665" y="336" fill="#fff" font-weight="700">⚡ CRASH — no COMMIT</text>
+    <animate attributeName="opacity" values="0.25;0.25;1;1" keyTimes="0;0.7;0.72;1" dur="10s" repeatCount="indefinite"/></g>
+  <g opacity="0.25"><rect x="645" y="366" width="485" height="50" rx="10" fill="#18181b"/><text x="665" y="398" fill="#fff" font-weight="700">ROLLBACK;  (automatic on restart)</text>
+    <animate attributeName="opacity" values="0.25;0.25;1;1" keyTimes="0;0.8;0.82;1" dur="10s" repeatCount="indefinite"/></g>
+</g>
+<g opacity="0"><text x="887" y="490" text-anchor="middle" font-size="22" font-weight="700" fill="#0f766e">A ₹5,000 + B ₹2,000 = ₹7,000 ✔</text>
+  <text x="887" y="525" text-anchor="middle" font-size="17" fill="#71717a">as if the transfer was never attempted</text>
+  <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.87;0.89;1" dur="10s" repeatCount="indefinite"/></g>
+</svg>

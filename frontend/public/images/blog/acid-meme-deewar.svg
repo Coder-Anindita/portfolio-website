@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" width="1200" height="620" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<rect width="100%" height="100%" fill="#18181b"/>
+<text x="600" y="62" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">MVCC vs Locking, the Deewar remix:</text>
+
+<rect x="30" y="100" width="560" height="490" rx="14" fill="#eef2ff"/>
+<g text-anchor="middle">
+  <text x="310" y="155" font-size="22" font-weight="700" fill="#4338ca">🕶️ MVCC</text>
+  <text x="310" y="300" font-size="120">😏</text>
+  <text x="310" y="380" font-size="21" font-weight="600" fill="#18181b">"Aaj mere paas snapshots hain,</text>
+  <text x="310" y="410" font-size="21" font-weight="600" fill="#18181b">row versions hain, non-blocking</text>
+  <text x="310" y="440" font-size="21" font-weight="600" fill="#18181b">reads hain… tumhare paas kya hai?"</text>
+  <text x="310" y="520" font-family="JetBrains Mono, Consolas, monospace" font-size="17" fill="#52525b">readers never wait for writers</text>
+</g>
+
+<rect x="610" y="100" width="560" height="490" rx="14" fill="#fffbeb"/>
+<g text-anchor="middle">
+  <text x="890" y="155" font-size="22" font-weight="700" fill="#b45309">🔐 Two-phase locking</text>
+  <text x="890" y="300" font-size="120">😤</text>
+  <text x="890" y="395" font-size="34" font-weight="800" fill="#18181b">"Mere paas…</text>
+  <text x="890" y="440" font-size="34" font-weight="800" fill="#b45309">LOCK hai." 🔒</text>
+  <text x="890" y="520" font-family="JetBrains Mono, Consolas, monospace" font-size="17" fill="#52525b">simple, strict, everyone else waits</text>
+</g>
+</svg>

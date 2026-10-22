@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 660" width="1200" height="660" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs>
+  <pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern>
+  <linearGradient id="bar" x1="0" x2="1"><stop offset="0" stop-color="#f43f5e"/><stop offset="0.5" stop-color="#f59e0b"/><stop offset="1" stop-color="#0f766e"/></linearGradient>
+</defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">The durability dial: how much can you afford to lose?</text>
+<text x="40" y="82" font-size="16" fill="#71717a">Every step right = more fsyncs / network round trips per commit = slower, but safer.</text>
+
+<text x="40" y="135" font-size="20" font-weight="700" fill="#e11d48">🚀 Fastest</text>
+<text x="1160" y="135" text-anchor="end" font-size="20" font-weight="700" fill="#0f766e">Safest 🛡️</text>
+<rect x="40" y="150" width="1120" height="16" rx="8" fill="url(#bar)"/>
+<g fill="#18181b"><circle cx="150" cy="158" r="12"/><circle cx="420" cy="158" r="12"/><circle cx="700" cy="158" r="12"/><circle cx="1050" cy="158" r="12"/></g>
+
+<g font-size="15">
+  <rect x="40" y="195" width="240" height="250" rx="14" fill="#fff1f2" stroke="#fecdd3"/>
+  <text x="60" y="228" font-size="18" font-weight="700" fill="#e11d48">Never flush</text>
+  <text x="60" y="258" font-family="JetBrains Mono, Consolas, monospace" font-size="13" fill="#18181b">fsync = off (PG)</text>
+  <text x="60" y="280" font-family="JetBrains Mono, Consolas, monospace" font-size="13" fill="#18181b">appendfsync no (Redis)</text>
+  <text x="60" y="320" fill="#18181b">OS decides when data</text><text x="60" y="340" fill="#18181b">reaches disk.</text>
+  <text x="60" y="380" fill="#e11d48" font-weight="600">PG fsync=off can</text><text x="60" y="400" fill="#e11d48" font-weight="600">corrupt the whole DB.</text>
+
+  <rect x="300" y="195" width="260" height="250" rx="14" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="320" y="228" font-size="18" font-weight="700" fill="#b45309">Flush ~every second</text>
+  <text x="320" y="258" font-family="JetBrains Mono, Consolas, monospace" font-size="13" fill="#18181b">synchronous_commit=off</text>
+  <text x="320" y="280" font-family="JetBrains Mono, Consolas, monospace" font-size="13" fill="#18181b">innodb_flush_log…=0 / 2</text>
+  <text x="320" y="302" font-family="JetBrains Mono, Consolas, monospace" font-size="13" fill="#18181b">appendfsync everysec</text>
+  <text x="320" y="340" fill="#18181b">Crash can lose the last</text><text x="320" y="360" fill="#18181b">~1 second of commits.</text>
+  <text x="320" y="400" fill="#b45309" font-weight="600">No corruption, just a</text><text x="320" y="420" fill="#b45309" font-weight="600">small window of loss.</text>
+
+  <rect x="580" y="195" width="250" height="250" rx="14" fill="#f0fdfa" stroke="#99f6e4"/>
+  <text x="600" y="228" font-size="18" font-weight="700" fill="#0f766e">Flush every commit</text>
+  <text x="600" y="258" font-family="JetBrains Mono, Consolas, monospace" font-size="13" fill="#18181b">synchronous_commit=on</text>
+  <text x="600" y="280" font-family="JetBrains Mono, Consolas, monospace" font-size="13" fill="#18181b">innodb_flush_log…=1</text>
+  <text x="600" y="320" fill="#18181b">COMMIT waits for the</text><text x="600" y="340" fill="#18181b">WAL to hit disk.</text>
+  <text x="600" y="380" fill="#0f766e" font-weight="600">⭐ The default in</text><text x="600" y="400" fill="#0f766e" font-weight="600">PostgreSQL &amp; MySQL.</text>
+
+  <rect x="850" y="195" width="310" height="250" rx="14" fill="#ecfeff" stroke="#0f766e" stroke-width="2"/>
+  <text x="870" y="228" font-size="18" font-weight="700" fill="#0f766e">Sync replication</text>
+  <text x="870" y="258" font-family="JetBrains Mono, Consolas, monospace" font-size="13" fill="#18181b">synchronous_standby_names</text>
+  <text x="870" y="280" font-family="JetBrains Mono, Consolas, monospace" font-size="13" fill="#18181b">(+ multi-AZ / quorum)</text>
+  <text x="870" y="320" fill="#18181b">COMMIT waits until another</text><text x="870" y="340" fill="#18181b">machine has the WAL too.</text>
+  <text x="870" y="380" fill="#0f766e" font-weight="600">Survives losing the</text><text x="870" y="400" fill="#0f766e" font-weight="600">whole server.</text>
+</g>
+
+<g font-size="17">
+  <rect x="40" y="475" width="545" height="160" rx="14" fill="#fff" stroke="#e4e4e7"/>
+  <text x="65" y="510" font-weight="700" fill="#e11d48">🚀 Speed first: OK to lose a second</text>
+  <text x="65" y="545" fill="#18181b">📊 analytics &amp; click events · 👀 blog view counters</text>
+  <text x="65" y="575" fill="#18181b">🧾 app logs · 🧠 caches &amp; sessions</text>
+  <text x="65" y="605" fill="#18181b">📡 IoT sensor readings every 100 ms</text>
+
+  <rect x="615" y="475" width="545" height="160" rx="14" fill="#fff" stroke="#e4e4e7"/>
+  <text x="640" y="510" font-weight="700" fill="#0f766e">🛡️ Durability first: losing one is a disaster</text>
+  <text x="640" y="545" fill="#18181b">💳 payments &amp; UPI · 🛒 orders · 🎫 IRCTC bookings</text>
+  <text x="640" y="575" fill="#18181b">🏥 medical records · 📈 stock trades</text>
+  <text x="640" y="605" fill="#18181b">🔐 user accounts &amp; passwords</text>
+</g>
+</svg>

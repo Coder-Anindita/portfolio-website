@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" width="1200" height="620" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<rect width="100%" height="100%" fill="#18181b"/>
+<text x="600" y="62" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">Dirty read, explained by Hera Pheri:</text>
+
+<rect x="30" y="100" width="560" height="490" rx="14" fill="#ecfdf5"/>
+<g text-anchor="middle">
+  <text x="310" y="155" font-size="20" font-weight="600" fill="#18181b">T2 reads T1's uncommitted credit</text>
+  <rect x="90" y="175" width="440" height="56" rx="12" fill="#fff" stroke="#a7f3d0" stroke-width="2"/>
+  <text x="310" y="212" font-family="JetBrains Mono, Consolas, monospace" font-size="22" font-weight="700" fill="#0f766e">balance = ₹10,00,000 🤑</text>
+  <text x="310" y="380" font-size="130">🤩</text>
+  <text x="310" y="470" font-size="30" font-weight="800" fill="#18181b">"Paisa hi paisa hoga!"</text>
+  <text x="310" y="510" font-size="18" fill="#52525b">*books a Goa trip on that balance*</text>
+</g>
+
+<rect x="610" y="100" width="560" height="490" rx="14" fill="#fff1f2"/>
+<g text-anchor="middle">
+  <text x="890" y="155" font-size="20" font-weight="600" fill="#18181b">T1, two seconds later</text>
+  <rect x="670" y="175" width="440" height="56" rx="12" fill="#fff" stroke="#fecdd3" stroke-width="2"/>
+  <text x="890" y="212" font-family="JetBrains Mono, Consolas, monospace" font-size="22" font-weight="700" fill="#e11d48">ROLLBACK;  balance = ₹0</text>
+  <text x="890" y="380" font-size="130">😭</text>
+  <text x="890" y="470" font-size="30" font-weight="800" fill="#18181b">"Utha le re baba…"</text>
+  <text x="890" y="510" font-size="18" fill="#52525b">the money never existed</text>
+</g>
+</svg>

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs><pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern></defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">ACID = 4 guarantees about every transaction</text>
+<text x="40" y="82" font-size="16" fill="#71717a">Applied to our ₹1000 transfer from A to B</text>
+
+<g>
+  <rect x="40" y="110" width="265" height="490" rx="18" fill="#fff" stroke="#99f6e4" stroke-width="2"/>
+  <rect x="40" y="110" width="265" height="10" rx="5" fill="#0f766e"/>
+  <text x="70" y="190" font-size="60" font-weight="800" fill="#0f766e">A</text>
+  <text x="70" y="232" font-size="24" font-weight="700" fill="#18181b">Atomicity</text>
+  <text x="70" y="262" font-size="17" fill="#71717a">All steps happen,</text>
+  <text x="70" y="285" font-size="17" fill="#71717a">or none of them do.</text>
+  <text x="70" y="345" font-size="15" font-weight="700" fill="#0f766e">IN OUR TRANSFER</text>
+  <text x="70" y="372" font-size="17" fill="#18181b">Debit A and credit B</text>
+  <text x="70" y="396" font-size="17" fill="#18181b">together — or neither.</text>
+  <text x="70" y="456" font-size="15" font-weight="700" fill="#0f766e">HOW</text>
+  <text x="70" y="483" font-size="17" fill="#18181b">Undo logs, WAL,</text>
+  <text x="70" y="507" font-size="17" fill="#18181b">rollback</text>
+  <text x="70" y="570" font-size="32">⚛️</text>
+</g>
+<g>
+  <rect x="325" y="110" width="265" height="490" rx="18" fill="#fff" stroke="#fde68a" stroke-width="2"/>
+  <rect x="325" y="110" width="265" height="10" rx="5" fill="#d97706"/>
+  <text x="355" y="190" font-size="60" font-weight="800" fill="#d97706">C</text>
+  <text x="355" y="232" font-size="24" font-weight="700" fill="#18181b">Consistency</text>
+  <text x="355" y="262" font-size="17" fill="#71717a">Data goes from one</text>
+  <text x="355" y="285" font-size="17" fill="#71717a">valid state to another.</text>
+  <text x="355" y="345" font-size="15" font-weight="700" fill="#d97706">IN OUR TRANSFER</text>
+  <text x="355" y="372" font-size="17" fill="#18181b">Total stays ₹7,000;</text>
+  <text x="355" y="396" font-size="17" fill="#18181b">no balance below ₹0.</text>
+  <text x="355" y="456" font-size="15" font-weight="700" fill="#d97706">HOW</text>
+  <text x="355" y="483" font-size="17" fill="#18181b">Constraints +</text>
+  <text x="355" y="507" font-size="17" fill="#18181b">application checks</text>
+  <text x="355" y="570" font-size="32">📏</text>
+</g>
+<g>
+  <rect x="610" y="110" width="265" height="490" rx="18" fill="#fff" stroke="#c7d2fe" stroke-width="2"/>
+  <rect x="610" y="110" width="265" height="10" rx="5" fill="#4338ca"/>
+  <text x="640" y="190" font-size="60" font-weight="800" fill="#4338ca">I</text>
+  <text x="640" y="232" font-size="24" font-weight="700" fill="#18181b">Isolation</text>
+  <text x="640" y="262" font-size="17" fill="#71717a">Concurrent transactions</text>
+  <text x="640" y="285" font-size="17" fill="#71717a">don't step on each other.</text>
+  <text x="640" y="345" font-size="15" font-weight="700" fill="#4338ca">IN OUR TRANSFER</text>
+  <text x="640" y="372" font-size="17" fill="#18181b">Nobody sees the ₹1000</text>
+  <text x="640" y="396" font-size="17" fill="#18181b">"in mid-air".</text>
+  <text x="640" y="456" font-size="15" font-weight="700" fill="#4338ca">HOW</text>
+  <text x="640" y="483" font-size="17" fill="#18181b">Locks, MVCC,</text>
+  <text x="640" y="507" font-size="17" fill="#18181b">conflict detection</text>
+  <text x="640" y="570" font-size="32">🚧</text>
+</g>
+<g>
+  <rect x="895" y="110" width="265" height="490" rx="18" fill="#fff" stroke="#fecdd3" stroke-width="2"/>
+  <rect x="895" y="110" width="265" height="10" rx="5" fill="#e11d48"/>
+  <text x="925" y="190" font-size="60" font-weight="800" fill="#e11d48">D</text>
+  <text x="925" y="232" font-size="24" font-weight="700" fill="#18181b">Durability</text>
+  <text x="925" y="262" font-size="17" fill="#71717a">Once committed,</text>
+  <text x="925" y="285" font-size="17" fill="#71717a">it stays committed.</text>
+  <text x="925" y="345" font-size="15" font-weight="700" fill="#e11d48">IN OUR TRANSFER</text>
+  <text x="925" y="372" font-size="17" fill="#18181b">"Success" survives a</text>
+  <text x="925" y="396" font-size="17" fill="#18181b">power cut a second later.</text>
+  <text x="925" y="456" font-size="15" font-weight="700" fill="#e11d48">HOW</text>
+  <text x="925" y="483" font-size="17" fill="#18181b">WAL + fsync,</text>
+  <text x="925" y="507" font-size="17" fill="#18181b">replication</text>
+  <text x="925" y="570" font-size="32">💾</text>
+</g>
+</svg>
