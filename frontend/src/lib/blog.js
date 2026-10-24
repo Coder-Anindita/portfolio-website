@@ -14,6 +14,30 @@ const contentPath = (path) => path.replace(/\?meta$/, '')
 
 const components = {}
 
+// Set `category: <id>` in a post's frontmatter. Posts without one go to "general".
+// The order here is the order categories appear on the blogs page.
+export const categories = [
+  {
+    id: 'langchain',
+    name: 'LangChain',
+    description: 'Building with LLMs: chains, RAG and making documents talk back.',
+  },
+  {
+    id: 'system-design',
+    name: 'System Design',
+    description: 'The fundamentals behind reliable systems: databases, networking and security.',
+  },
+  {
+    id: 'general',
+    name: 'General',
+    description: 'Case studies, stories and everything else from tech.',
+  },
+]
+
+export function getCategory(id) {
+  return categories.find((category) => category.id === id)
+}
+
 export const posts = Object.entries(metaModules)
   .map(([metaPath, { frontmatter, readingTime }]) => {
     const slug = slugFromPath(metaPath)
@@ -24,6 +48,7 @@ export const posts = Object.entries(metaModules)
       date: frontmatter.date ? String(frontmatter.date).slice(0, 10) : '',
       image: frontmatter.image || '',
       tags: frontmatter.tags || [],
+      category: getCategory(frontmatter.category) ? frontmatter.category : 'general',
       draft: Boolean(frontmatter.draft),
       readingTime,
       path: contentPath(metaPath),
@@ -32,10 +57,6 @@ export const posts = Object.entries(metaModules)
   // Set `draft: true` in frontmatter to hide a post in production builds.
   .filter((post) => import.meta.env.DEV || !post.draft)
   .sort((a, b) => (a.date < b.date ? 1 : -1))
-
-export const allTags = [...new Set(posts.flatMap((post) => post.tags))].sort((a, b) =>
-  a.localeCompare(b),
-)
 
 export function getPost(slug) {
   return posts.find((post) => post.slug === slug)

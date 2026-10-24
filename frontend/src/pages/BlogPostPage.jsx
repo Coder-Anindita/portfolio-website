@@ -7,7 +7,7 @@ import TableOfContents from '../components/blog/TableOfContents.jsx'
 import Badge from '../components/ui/Badge.jsx'
 import Seo from '../components/ui/Seo.jsx'
 import { usePostEngagement } from '../hooks/usePostStats.js'
-import { getAdjacentPosts, getPost, getPostComponent } from '../lib/blog.js'
+import { getAdjacentPosts, getCategory, getPost, getPostComponent } from '../lib/blog.js'
 import NotFoundPage from './NotFoundPage.jsx'
 
 // Runs after the lazily-loaded article has rendered and collects its h2/h3 headings.
@@ -88,6 +88,12 @@ export default function BlogPostPage() {
         <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_220px] xl:gap-16">
           <article className="mx-auto w-full max-w-[44rem] xl:mx-0 xl:justify-self-end">
             <header className="rise">
+              <Link
+                to={`/blogs?category=${post.category}`}
+                className="mb-4 inline-block font-mono text-xs font-medium tracking-[0.18em] text-accent uppercase transition-colors hover:text-accent-strong"
+              >
+                {getCategory(post.category).name}
+              </Link>
               {post.tags.length > 0 && (
                 <ul className="mb-5 flex flex-wrap gap-2" aria-label="Tags">
                   {post.tags.map((tag) => (
