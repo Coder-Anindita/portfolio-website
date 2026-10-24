@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 530" width="1200" height="530" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs>
+  <pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern>
+  <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#52525b"/></marker>
+  <marker id="r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e11d48"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">Where the weak keys sat in the chain of trust</text>
+<text x="40" y="82" font-size="16" fill="#71717a">Eight intermediate CAs, created on 30 April 2025, all chaining up to a root that browsers trusted.</text>
+<rect x="40" y="170" width="300" height="200" rx="16" fill="#fff" stroke="#d97706" stroke-width="2"/>
+<path d="M40 212 V186 a16 16 0 0 1 16 -16 H324 a16 16 0 0 1 16 16 V212 Z" fill="#d97706"/>
+<text x="60" y="198" font-size="17" font-weight="700" fill="#fff">🏛️ Root CA</text>
+<g font-size="15" fill="#18181b"><text x="60" y="245" font-family="JetBrains Mono, Consolas, monospace" font-size="14">emSign ECC Root CA - G3</text>
+<text x="60" y="280">trusted by browsers and</text><text x="60" y="302">operating systems</text>
+<text x="60" y="340" fill="#0f766e" font-weight="600">✅ its own key was fine</text></g>
+<line x1="340" y1="270" x2="416" y2="270" stroke="#52525b" stroke-width="2.5" marker-end="url(#a)"/>
+<text x="378" y="258" text-anchor="middle" font-size="13" fill="#18181b">signs</text>
+<rect x="415" y="120" width="385" height="385" rx="16" fill="#fff" stroke="#e11d48" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="607" y="152" text-anchor="middle" font-size="17" font-weight="700" fill="#e11d48">8 intermediate CAs 🔓</text>
+<rect x="430" y="175" width="170" height="42" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="2"/><text x="515" y="202" text-anchor="middle" font-size="14" fill="#18181b">TLS · DV · G3B</text><rect x="615" y="175" width="170" height="42" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="2"/><text x="700" y="202" text-anchor="middle" font-size="14" fill="#18181b">TLS · DV · G3C</text><rect x="430" y="231" width="170" height="42" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="2"/><text x="515" y="258" text-anchor="middle" font-size="14" fill="#18181b">TLS · OV · G3B</text><rect x="615" y="231" width="170" height="42" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="2"/><text x="700" y="258" text-anchor="middle" font-size="14" fill="#18181b">TLS · OV · G3C</text><rect x="430" y="287" width="170" height="42" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="2"/><text x="515" y="314" text-anchor="middle" font-size="14" fill="#18181b">TLS · EV · G3B</text><rect x="615" y="287" width="170" height="42" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="2"/><text x="700" y="314" text-anchor="middle" font-size="14" fill="#18181b">TLS · EV · G3C</text><rect x="430" y="343" width="170" height="42" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="2"/><text x="515" y="370" text-anchor="middle" font-size="14" fill="#18181b">Code signing · G3B</text><rect x="615" y="343" width="170" height="42" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="2"/><text x="700" y="370" text-anchor="middle" font-size="14" fill="#18181b">Code signing · G3C</text>
+<text x="607" y="430" text-anchor="middle" font-size="15" font-weight="700" fill="#e11d48">private keys: all smaller than 256</text>
+<text x="607" y="456" text-anchor="middle" font-size="13" fill="#71717a">anyone could work them out</text>
+<text x="607" y="476" text-anchor="middle" font-size="13" fill="#71717a">from the public certificates</text>
+<line x1="800" y1="230" x2="876" y2="230" stroke="#e11d48" stroke-width="2.5" marker-end="url(#r)"/>
+<line x1="800" y1="390" x2="876" y2="390" stroke="#e11d48" stroke-width="2.5" marker-end="url(#r)"/>
+<text x="838" y="218" text-anchor="middle" font-size="13" fill="#e11d48">could sign</text>
+<text x="838" y="378" text-anchor="middle" font-size="13" fill="#e11d48">could sign</text>
+<rect x="880" y="170" width="280" height="120" rx="16" fill="#fff" stroke="#d6d3d1" stroke-width="2"/>
+<text x="900" y="210" font-size="17" font-weight="700" fill="#18181b">🌐 A certificate for</text>
+<text x="900" y="236" font-size="17" font-weight="700" fill="#18181b">any website</text>
+<text x="900" y="266" font-size="14" fill="#71717a">yourbank.com, gmail.com…</text>
+<rect x="880" y="330" width="280" height="120" rx="16" fill="#fff" stroke="#d6d3d1" stroke-width="2"/>
+<text x="900" y="370" font-size="17" font-weight="700" fill="#18181b">📦 "Trusted" software</text>
+<text x="900" y="400" font-size="14" fill="#71717a">malware that looks like it</text>
+<text x="900" y="420" font-size="14" fill="#71717a">came from a real company</text>
+<rect x="40" y="520" width="1120" height="1" fill="#fafaf9"/>
+</svg>

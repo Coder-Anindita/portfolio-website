@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 610" width="1200" height="610" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs>
+  <pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern>
+  <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#52525b"/></marker>
+  <marker id="r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e11d48"/></marker>
+  <marker id="t" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#0f766e"/></marker>
+  <marker id="i" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4338ca"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">How a Certificate Authority issues a certificate</text>
+<text x="40" y="82" font-size="16" fill="#71717a">The CA vouches: “this public key belongs to jim.com”, and signs that statement with its own private key.</text>
+<g font-size="14" fill="#18181b">
+  <rect x="40" y="115" width="250" height="160" rx="14" fill="#fff" stroke="#d6d3d1" stroke-width="2"/>
+  <text x="58" y="146" font-size="16" font-weight="700">① Jim makes a key pair</text>
+  <text x="58" y="178">🔑 private key stays on</text><text x="58" y="198">the server, always</text>
+  <text x="58" y="228">🔓 public key + “jim.com”</text><text x="58" y="248">go to the CA in a CSR</text>
+  <rect x="330" y="115" width="250" height="160" rx="14" fill="#fff" stroke="#d6d3d1" stroke-width="2"/>
+  <text x="348" y="146" font-size="16" font-weight="700">② CA checks the domain</text>
+  <text x="348" y="178">“Prove you control jim.com”:</text><text x="348" y="198">serve a token at a URL</text><text x="348" y="218">or add a DNS record</text>
+  <text x="348" y="248" fill="#71717a">(Let's Encrypt automates this)</text>
+  <rect x="620" y="115" width="250" height="160" rx="14" fill="#fff" stroke="#d6d3d1" stroke-width="2"/>
+  <text x="638" y="146" font-size="16" font-weight="700">③ CA builds the data</text>
+  <g font-family="JetBrains Mono, Consolas, monospace" font-size="13"><text x="638" y="178">subject:  jim.com</text><text x="638" y="200">key:      04a1…9c</text><text x="638" y="222">issuer:   Some CA</text><text x="638" y="244">valid:    90 days</text></g>
+  <rect x="910" y="115" width="250" height="160" rx="14" fill="#eef2ff" stroke="#4338ca" stroke-width="2"/>
+  <text x="928" y="146" font-size="16" font-weight="700">④ Hash, then sign</text>
+  <g font-family="JetBrains Mono, Consolas, monospace" font-size="13"><text x="928" y="180">h = SHA-256(data)</text><text x="928" y="205">sig = sign(h, CA 🔑)</text></g>
+  <text x="928" y="240">✍️ the signature is</text><text x="928" y="260">attached to the data</text>
+</g>
+<g stroke="#52525b" stroke-width="2.5" marker-end="url(#a)"><line x1="290" y1="195" x2="326" y2="195"/><line x1="580" y1="195" x2="616" y2="195"/><line x1="870" y1="195" x2="906" y2="195"/></g>
+<rect x="330" y="310" width="540" height="165" rx="14" fill="#fff" stroke="#0f766e" stroke-width="2"/>
+<path d="M330 352 V324 a14 14 0 0 1 14 -14 H856 a14 14 0 0 1 14 14 V352 Z" fill="#0f766e"/>
+<text x="350" y="338" font-size="17" font-weight="700" fill="#fff">📜 Certificate for jim.com</text>
+<g font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#18181b"><text x="350" y="384">subject:  jim.com</text><text x="350" y="408">key:      04a1…9c</text><text x="350" y="432">issuer:   Some CA</text><text x="350" y="456">expires:  2027-01-22</text></g>
+<rect x="690" y="372" width="160" height="88" rx="10" fill="#e0e7ff" stroke="#4338ca" stroke-width="2"/>
+<text x="770" y="408" text-anchor="middle" font-size="15" fill="#18181b">✍️ CA's</text><text x="770" y="432" text-anchor="middle" font-size="15" font-weight="700" fill="#18181b">signature</text>
+<path d="M1035 275 V416 H856" stroke="#4338ca" stroke-width="2.5" fill="none" marker-end="url(#i)"/>
+<rect x="40" y="505" width="1120" height="76" rx="14" fill="#18181b"/>
+<text x="600" y="538" text-anchor="middle" font-size="18" font-weight="700" fill="#fff">The CA's private key is never put in the certificate. It never leaves the CA.</text>
+<text x="600" y="564" text-anchor="middle" font-size="15" fill="#a1a1aa">Only the signature it produced goes in. Jim's private key never leaves Jim's server either.</text>
+</svg>

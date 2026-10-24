@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 650" width="1200" height="650" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs>
+  <pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern>
+  <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#52525b"/></marker>
+  <marker id="r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e11d48"/></marker>
+  <marker id="t" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#0f766e"/></marker>
+  <marker id="i" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4338ca"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">Digital signatures: proving Pam wrote it</text>
+<text x="40" y="82" font-size="16" fill="#71717a">Pam signs a hash of the message with her private key. Anyone with her public key can check the signature.</text>
+<rect x="40" y="110" width="1120" height="190" rx="16" fill="#eef2ff"/>
+<text x="60" y="142" font-size="18" font-weight="700" fill="#4338ca">✍️ Pam signs</text>
+<g text-anchor="middle" font-size="16" fill="#18181b">
+  <rect x="60" y="170" width="220" height="64" rx="12" fill="#fff" stroke="#d6d3d1" stroke-width="2"/><text x="170" y="208">📄 message</text>
+  <rect x="350" y="170" width="200" height="64" rx="12" fill="#fff" stroke="#d6d3d1" stroke-width="2"/><text x="450" y="208" font-family="JetBrains Mono, Consolas, monospace">hash: 9f2c…</text>
+  <rect x="700" y="170" width="200" height="64" rx="12" fill="#e0e7ff" stroke="#4338ca" stroke-width="2"/><text x="800" y="208" font-weight="700">✍️ signature</text>
+  <rect x="960" y="170" width="180" height="64" rx="12" fill="#fff" stroke="#d6d3d1" stroke-width="2"/><text x="1050" y="208">📨 send both</text>
+  <line x1="280" y1="202" x2="346" y2="202" stroke="#52525b" stroke-width="2.5" marker-end="url(#a)"/><text x="315" y="190" font-size="12" font-family="JetBrains Mono, Consolas, monospace">SHA-256</text>
+  <line x1="550" y1="202" x2="696" y2="202" stroke="#4338ca" stroke-width="2.5" marker-end="url(#i)"/><text x="623" y="190" font-size="14">sign with Pam's 🔑</text>
+  <line x1="900" y1="202" x2="956" y2="202" stroke="#52525b" stroke-width="2.5" marker-end="url(#a)"/>
+</g>
+<text x="60" y="275" font-size="14" fill="#71717a">The message travels with its signature. A hash is a short fingerprint: change one letter and it changes completely.</text>
+<rect x="40" y="320" width="1120" height="220" rx="16" fill="#f0fdfa"/>
+<text x="60" y="352" font-size="18" font-weight="700" fill="#0f766e">🔍 Jim verifies</text>
+<g text-anchor="middle" font-size="16" fill="#18181b">
+  <rect x="60" y="380" width="220" height="56" rx="12" fill="#fff" stroke="#d6d3d1" stroke-width="2"/><text x="170" y="414">📄 message</text>
+  <rect x="350" y="380" width="200" height="56" rx="12" fill="#fff" stroke="#d6d3d1" stroke-width="2"/><text x="450" y="414" font-family="JetBrains Mono, Consolas, monospace">hash: 9f2c…</text>
+  <line x1="280" y1="408" x2="346" y2="408" stroke="#52525b" stroke-width="2.5" marker-end="url(#a)"/><text x="315" y="396" font-size="12" font-family="JetBrains Mono, Consolas, monospace">SHA-256</text>
+  <rect x="60" y="460" width="220" height="56" rx="12" fill="#e0e7ff" stroke="#4338ca" stroke-width="2"/><text x="170" y="494">✍️ signature</text>
+  <text x="315" y="496" font-size="22" font-weight="700" fill="#52525b">+</text>
+  <rect x="350" y="460" width="200" height="56" rx="12" fill="#fff" stroke="#0f766e" stroke-width="2"/><text x="450" y="494">🔓 Pam's public key</text>
+  <rect x="680" y="405" width="200" height="90" rx="14" fill="#fff" stroke="#18181b" stroke-width="2"/>
+  <text x="780" y="443" font-family="JetBrains Mono, Consolas, monospace" font-weight="700">verify()</text><text x="780" y="470" font-size="14" fill="#71717a">does it all match?</text>
+  <path d="M550 408 L676 432" stroke="#52525b" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <path d="M550 488 L676 468" stroke="#52525b" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <rect x="950" y="385" width="190" height="50" rx="12" fill="#fff" stroke="#0f766e" stroke-width="2"/><text x="1045" y="416" font-size="14" fill="#0f766e" font-weight="700">✅ from Pam, untouched</text>
+  <rect x="950" y="465" width="190" height="50" rx="12" fill="#fff" stroke="#e11d48" stroke-width="2"/><text x="1045" y="496" font-size="14" fill="#e11d48" font-weight="700">❌ forged or modified</text>
+  <path d="M880 440 L946 412" stroke="#0f766e" stroke-width="2.5" fill="none" marker-end="url(#t)"/>
+  <path d="M880 460 L946 488" stroke="#e11d48" stroke-width="2.5" fill="none" marker-end="url(#r)"/>
+</g>
+<rect x="40" y="565" width="1120" height="60" rx="14" fill="#18181b"/>
+<text x="600" y="601" text-anchor="middle" font-size="17" fill="#fff"><tspan font-weight="700">Authentication</tspan> (it's really Pam) + <tspan font-weight="700">integrity</tspan> (nothing changed). Not secrecy: anyone can read the message.</text>
+</svg>

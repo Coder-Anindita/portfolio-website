@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 610" width="1200" height="610" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs>
+  <pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern>
+  <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#52525b"/></marker>
+  <marker id="r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e11d48"/></marker>
+  <marker id="t" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#0f766e"/></marker>
+  <marker id="i" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4338ca"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">Asymmetric encryption: a padlock and its key</text>
+<text x="40" y="82" font-size="16" fill="#71717a">Anyone can lock a message with Pam's public key. Only Pam's private key can unlock it.</text>
+<rect x="40" y="110" width="540" height="56" rx="12" fill="#f0fdfa" stroke="#0f766e" stroke-width="2"/>
+<text x="60" y="144" font-size="16" fill="#18181b"><tspan font-weight="700">🔓 Public key</tspan> = an open padlock. Hand out copies freely.</text>
+<rect x="620" y="110" width="540" height="56" rx="12" fill="#eef2ff" stroke="#4338ca" stroke-width="2"/>
+<text x="640" y="144" font-size="16" fill="#18181b"><tspan font-weight="700">🔑 Private key</tspan> = the only key that opens it. Never shared.</text>
+<g text-anchor="middle">
+  <rect x="40" y="210" width="200" height="120" rx="16" fill="#fff" stroke="#d6d3d1" stroke-width="2"/><text x="140" y="262" font-size="20" font-weight="700" fill="#18181b">👩‍💻 Pam</text><text x="140" y="290" font-size="14" fill="#71717a">keeps her 🔑 secret</text>
+  <rect x="960" y="210" width="200" height="120" rx="16" fill="#fff" stroke="#d6d3d1" stroke-width="2"/><text x="1060" y="262" font-size="20" font-weight="700" fill="#18181b">🖥️ Jim</text><text x="1060" y="290" font-size="14" fill="#71717a">has Pam's 🔓</text>
+</g>
+<g font-size="15" text-anchor="middle" fill="#18181b">
+  <text x="600" y="237">① Pam sends her public key 🔓 (in the open, that's fine)</text>
+  <line x1="240" y1="250" x2="956" y2="250" stroke="#0f766e" stroke-width="3" marker-end="url(#t)"/>
+  <text x="600" y="290">② Jim locks his message with it  →  🔒 “a7Fk…”</text>
+  <line x1="960" y1="303" x2="244" y2="303" stroke="#4338ca" stroke-width="3" marker-end="url(#i)"/>
+</g>
+<line x1="600" y1="310" x2="600" y2="368" stroke="#e11d48" stroke-width="2.5" stroke-dasharray="6 6"/>
+<rect x="40" y="370" width="410" height="60" rx="12" fill="#f0fdfa" stroke="#0f766e" stroke-width="2"/>
+<text x="60" y="406" font-size="16" fill="#18181b">③ Pam unlocks it with her private key 🔑 ✅</text>
+<rect x="500" y="370" width="200" height="90" rx="16" fill="#fff1f2" stroke="#e11d48" stroke-width="2"/>
+<text x="600" y="406" text-anchor="middle" font-size="20" font-weight="700" fill="#18181b">🕵️ Hacker</text>
+<text x="600" y="434" text-anchor="middle" font-size="14" fill="#71717a">has 🔓 and 🔒 “a7Fk…”</text>
+<text x="720" y="420" font-size="16" font-weight="600" fill="#e11d48">…but no 🔑, so it stays locked. ❌</text>
+<rect x="40" y="490" width="1120" height="90" rx="14" fill="#18181b"/>
+<text x="600" y="528" text-anchor="middle" font-size="19" font-weight="700" fill="#fff">This gives confidentiality: only the private key holder can read the message.</text>
+<text x="600" y="557" text-anchor="middle" font-size="15" fill="#a1a1aa">The two keys are mathematically linked, but you can't work out the private key from the public one.</text>
+</svg>

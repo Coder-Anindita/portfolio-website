@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 540" width="1200" height="540" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs>
+  <pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern>
+  <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#52525b"/></marker>
+  <marker id="r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e11d48"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#18181b">How big a private key should be vs. what eMudhra had</text>
+<text x="40" y="82" font-size="16" fill="#71717a">A P-384 private key is a random number picked from about 2³⁸⁴ (≈ 10¹¹⁵) possibilities.</text>
+<rect x="40" y="115" width="1120" height="170" rx="16" fill="#f0fdfa" stroke="#0f766e" stroke-width="2"/>
+<text x="64" y="150" font-size="18" font-weight="700" fill="#0f766e">✅ A properly generated key (example)</text>
+<g font-family="JetBrains Mono, Consolas, monospace" font-size="17" fill="#18181b"><text x="64" y="192">3080537318364026724996677669964434272773597694404990745233</text><text x="64" y="220">0861041625445527433170438803918356651852051140384481429245</text></g>
+<text x="64" y="262" font-size="16" fill="#18181b">⏳ Guessing it: longer than the age of the universe, even with every computer on Earth.</text>
+<rect x="40" y="305" width="1120" height="140" rx="16" fill="#fff1f2" stroke="#e11d48" stroke-width="2"/>
+<text x="64" y="340" font-size="18" font-weight="700" fill="#e11d48">❌ One of eMudhra's keys</text>
+<text x="64" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="56" font-weight="800" fill="#e11d48">4</text>
+<text x="130" y="385" font-size="16" fill="#18181b">⚡ Guessing it: try 1, 2, 3, 4… done.</text>
+<text x="130" y="412" font-size="16" fill="#18181b">All eight keys were below 256. A laptop finds them in under a second.</text>
+<rect x="40" y="465" width="1120" height="56" rx="14" fill="#18181b"/>
+<text x="600" y="500" text-anchor="middle" font-size="18" font-weight="700" fill="#fff">The P-384 math wasn't broken. The keys were just generated badly.</text>
+</svg>

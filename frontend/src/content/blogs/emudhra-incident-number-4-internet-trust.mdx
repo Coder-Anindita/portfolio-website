@@ -1,0 +1,167 @@
+---
+title: "The Number 4 That Shook Internet Trust: Inside the eMudhra Incident"
+description: "In October 2026, eight of eMudhra's certificate authority keys turned out to be tiny numbers. One was literally 4. Here's what happened, why it was dangerous, and how browsers shut it down within hours."
+date: "2026-10-24"
+image: "/images/blog/emudhra-cover.svg"
+tags:
+  - Security
+  - Networking
+  - Case Study
+---
+
+You open your bank's website. There's `https://`, the little padlock 🔒, the familiar login page. Everything looks safe.
+
+Now imagine someone could create a *valid* certificate for your bank's website, without the bank ever knowing. Your browser would happily show the padlock while you type your password into a fake site.
+
+In October 2026, that became possible. Eight certificate authority keys belonging to **eMudhra**, an Indian certificate company, turned out to be dangerously weak. One of them was the number **4**.
+
+Not a password containing 4. Not a long number starting with 4. Just... **4**.
+
+Let's break down what happened, why it mattered, and how the internet fixed it in a matter of hours.
+
+<Callout type="info" title="New to certificates?">
+  This post builds on how SSL certificates work. If terms like "public key" or "Certificate Authority" are fuzzy, read [Why Hackers Can't Read Your Password](/blogs/why-hackers-cant-read-your-password) first. It's a 7 minute read.
+</Callout>
+
+## Quick recap: who vouches for a website?
+
+When you visit a site, your browser checks its **certificate**: a signed note from a **Certificate Authority (CA)** saying *"this public key really belongs to this website"*.
+
+But big CAs don't sign website certificates directly. There's a chain:
+
+**Root CA → Intermediate CA → Website certificate**
+
+Think of it like a passport system:
+
+- 🏛️ **Root CA** = the central government. Your browser and operating system already trust it.
+- 🏢 **Intermediate CA** = a regional passport office, authorised by the government to issue passports.
+- 🌐 **Website** = the person getting the passport.
+
+The root keeps its key locked away, and intermediates do the day-to-day signing. That makes an intermediate **very powerful**: anything it signs, browsers trust.
+
+## The private key is the official stamp
+
+A CA signs certificates with its **private key**. Browsers check that signature using the matching **public key**, which anyone can see.
+
+Think of the private key as the passport office's **official stamp**. Anyone can check a stamp, but only the office should be able to make one. Get a copy of the stamp, and you can make "official" passports for anyone.
+
+Same here. Whoever holds an intermediate CA's private key can create a certificate for **any website**, and browsers would trust it. No need to hack the bank at all.
+
+## The shocking part: eight keys were tiny numbers
+
+On **30 April 2025**, eMudhra created eight intermediate CAs for its global certificate business: six for website (TLS) certificates and two for **code signing**, which is what proves software comes from a genuine company.
+
+![Where the weak keys sat](/images/blog/emudhra-chain.svg "Eight intermediates under one trusted root. Six for websites, two for software.")
+
+These keys used **P-384**, a strong, widely used type of elliptic-curve cryptography. A proper P-384 private key is a random number chosen from about **2³⁸⁴** possibilities. That's roughly 10¹¹⁵, a number with **116 digits**. Guessing it by brute force isn't hard, it's impossible.
+
+eMudhra's eight private keys were:
+
+**4, 56, 66, 115, 155, 156, 230 and 237.**
+
+All smaller than 256.
+
+![Proper key vs eMudhra's key](/images/blog/emudhra-key-space.svg)
+
+### Wait, how do you "guess" a private key?
+
+Here's the neat part. In elliptic-curve crypto, everyone uses the same publicly known starting point on the curve. The public key is where you land after "stepping" along the curve from that point, and the **private key is the number of steps**.
+
+Going forward is quick. Going backwards, working out how many steps were taken just from where you landed, is the hard problem the whole system relies on. With a real 116-digit key, there are far too many possibilities to try.
+
+But if the private key is 4? Take 1 step, 2 steps, 3 steps, 4 steps, and compare each landing spot with the public key printed in the certificate. Match on the 4th try. 🎯
+
+Security researcher Scott Helme recovered the keys *"on my laptop just now, and it took less than a second."* Usually a compromised CA key means someone stole it. Not this time. As he put it:
+
+> *"Here, nobody had to steal anything. The key was effectively public from the day the certificate existed."*
+
+<Callout type="warning" title="The algorithm wasn't broken">
+  P-384 is still perfectly secure. Nothing was wrong with the math. The problem was that the keys weren't random. **A strong lock is useless if the key is "4".**
+</Callout>
+
+### How did this even happen?
+
+According to eMudhra's preliminary explanation, during the key-creation ceremony a test step for **wrapping and unwrapping keys** (packaging them for secure transfer) had a bug. It quietly created a **second set of weak keys** alongside the real, strong ones.
+
+Because the two sets had **similar labels**, staff picked the weak keys by mistake. Those keys then sailed through audits and into browser trust stores, unnoticed, for **18 months**.
+
+Certified secure hardware can't save you from a buggy script and a confusing label. eMudhra says it has *"not yet confirmed the exact root cause"*, and its full report is still pending.
+
+## What could an attacker have done?
+
+Let's imagine an attacker wants to pretend to be `mybank.example` (a made-up example):
+
+![How an attacker could have abused these keys](/images/blog/emudhra-attack.svg)
+
+1. **Recover the key** by trying small numbers, as above.
+2. **Forge a certificate** for `mybank.example`, signed with the weak intermediate key.
+3. **Redirect the victim** to their own server, for example through a fake Wi-Fi hotspot or tampered DNS.
+4. The victim's browser sees a **valid-looking certificate** and shows the padlock. 🔒
+
+With the two code-signing keys, an attacker could also have signed **malware** to look like software from a legitimate company.
+
+What it could **not** do: decrypt everyone's internet traffic, or reveal the private keys of real websites. The danger was **impersonation**, not mass decryption.
+
+## Who found it, and how fast did the internet react?
+
+On **17 October 2026**, an independent researcher known only as **Wayne** reported the flaw to Google, Mozilla, Apple, Microsoft and eMudhra. As proof, he signed the same message with every one of the eight keys:
+
+> *"We have a problem here - Wayne."* 😅
+
+Then the internet moved, fast:
+
+- **Chrome** blocked the six website keys **less than 2 hours** after the report, and is removing the related root, *emSign ECC Root CA - G3*, entirely.
+- **Mozilla** cracked the keys itself within about two hours of getting the report, and blocked them in **Firefox** the same night.
+- **eMudhra** revoked all eight intermediates on 18 October.
+- **Apple**, **Microsoft**, Linux distributions, and tools like **Go** and **Node.js** shipped fixes over the next few days.
+
+Why act so drastically when nobody had been caught misusing the keys? Because once anyone can forge certificates, you can't wait to find out. **You cut off trust first, and investigate later.**
+
+## So... was anyone actually hacked?
+
+Here's the good news. **No confirmed attack has been reported.**
+
+- eMudhra says none of the eight intermediates had ever issued a certificate. Only one was even in production.
+- Google checked **Certificate Transparency** logs, the public record where certificates must be published to be trusted by Chrome, and found **no certificates** from the six website intermediates before the block.
+- India's **CERT-In** said in its advisory that the public disclosures *"do not establish confirmed malicious exploitation"*.
+- India's **digital signature (DSC) and eSign services** were not affected, since they run on separate infrastructure.
+
+The side effect: because browsers distrusted the whole *emSign ECC Root CA - G3*, some legitimate websites using certificates under that root had to replace them quickly, or their visitors would start seeing errors.
+
+## The aftermath
+
+The market reacted immediately. On 21 October, **eMudhra's shares fell 20%** on Indian stock exchanges.
+
+The next day, eMudhra announced it would **exit the global SSL/TLS certificate business** altogether. Chairman **V. Srinivasan** pointed to rising compliance costs and competition from large players giving certificates away for free, noting the business was only about **1% of revenue**. He also called the public scrutiny *"out of proportion to SSL/TLS's place in our business."*
+
+eMudhra says it will replace affected customers' certificates at no cost, keep revocation services running, and publish a full root-cause report.
+
+For a company whose entire product is *trust*, losing trust is the most expensive bug of all.
+
+## What can we learn from this?
+
+**1. Strong algorithms need strong keys.** P-384 did its job. The key generation didn't. Your system is only as strong as its weakest step.
+
+**2. Test the output, not just the process.** The ceremony passed audits twice. A simple automated check like *"is this private key suspiciously small?"* would have caught it on day one.
+
+**3. Labels matter.** Two sets of keys with similar names, and a human picked the wrong one. Clear naming isn't just tidiness, it's security.
+
+**4. Trust multiplies mistakes.** One website's bad key hurts one website. One intermediate CA's bad key threatens *every* website.
+
+## Final thoughts: the padlock is only as strong as the trust behind it
+
+No genius hackers, no broken encryption. Just a buggy script and a key that should have been a 116-digit secret but turned out to be **4**.
+
+The reassuring part: the system worked. A researcher spotted it, browsers blocked it within hours, and no attack was found. The padlock means something because of the whole **chain of trust** behind it, and the people constantly checking that chain. 🔒
+
+### Watch to learn more 🎥
+
+**On the eMudhra incident:**
+
+- [eMudhra Fiasco Explained: Weak Keys, Stock Crash & An Exit From Website Security](https://youtu.be/QsykdVZUd3w) by Firstpost
+- [eMudhra Security Incident Explained: What Went Wrong?](https://youtu.be/xwdY7PIit70) by Drishti IAS English
+- [eMudhra security breach explained: How safe is your internet connection?](https://youtu.be/NKAunCm4VKk) by Business Standard
+
+**New to SSL certificates?**
+
+- [What are SSL Certificates & How they work?](https://youtu.be/lh2K_kDH5s0) by Gate Smashers

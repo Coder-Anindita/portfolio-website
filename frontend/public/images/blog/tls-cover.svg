@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" font-family="Inter, Segoe UI, system-ui, sans-serif">
+<defs>
+  <pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#e7e5e4"/></pattern>
+  <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#52525b"/></marker>
+  <marker id="r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e11d48"/></marker>
+  <marker id="t" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#0f766e"/></marker>
+  <marker id="i" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4338ca"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#fafaf9"/><rect width="100%" height="100%" fill="url(#g)"/>
+<text x="600" y="120" text-anchor="middle" font-size="22" font-weight="600" letter-spacing="4" fill="#0f766e">ENCRYPTION &amp; SSL CERTIFICATES, SIMPLY EXPLAINED</text>
+<text x="600" y="200" text-anchor="middle" font-size="52" font-weight="700" fill="#18181b">Why hackers can’t read your password</text>
+<text x="600" y="252" text-anchor="middle" font-size="26" fill="#52525b">the story behind the little padlock 🔒</text>
+<g text-anchor="middle">
+  <rect x="70" y="320" width="196" height="240" rx="20" fill="#fff" stroke="#d6d3d1" stroke-width="2"/>
+  <text x="168" y="405" font-size="48">🔑</text><text x="168" y="462" font-size="22" font-weight="700" fill="#18181b">Symmetric</text>
+  <text x="168" y="497" font-size="15" fill="#71717a">one shared key,</text><text x="168" y="518" font-size="15" fill="#71717a">very fast</text>
+  <rect x="286" y="320" width="196" height="240" rx="20" fill="#fff" stroke="#d6d3d1" stroke-width="2"/>
+  <text x="384" y="405" font-size="48">🗝️</text><text x="384" y="462" font-size="22" font-weight="700" fill="#18181b">Asymmetric</text>
+  <text x="384" y="497" font-size="15" fill="#71717a">public + private</text><text x="384" y="518" font-size="15" fill="#71717a">key pair</text>
+  <rect x="502" y="320" width="196" height="240" rx="20" fill="#fff" stroke="#d6d3d1" stroke-width="2"/>
+  <text x="600" y="405" font-size="48">✍️</text><text x="600" y="462" font-size="22" font-weight="700" fill="#18181b">Signatures</text>
+  <text x="600" y="497" font-size="15" fill="#71717a">prove who</text><text x="600" y="518" font-size="15" fill="#71717a">sent it</text>
+  <rect x="718" y="320" width="196" height="240" rx="20" fill="#fff" stroke="#d6d3d1" stroke-width="2"/>
+  <text x="816" y="405" font-size="48">📜</text><text x="816" y="462" font-size="22" font-weight="700" fill="#18181b">Certificates</text>
+  <text x="816" y="497" font-size="15" fill="#71717a">prove whose</text><text x="816" y="518" font-size="15" fill="#71717a">key it is</text>
+  <rect x="934" y="320" width="196" height="240" rx="20" fill="#f0fdfa" stroke="#0f766e" stroke-width="2"/>
+  <text x="1032" y="405" font-size="48">🔒</text><text x="1032" y="462" font-size="22" font-weight="700" fill="#0f766e">TLS</text>
+  <text x="1032" y="497" font-size="15" fill="#71717a">all of it, in one</text><text x="1032" y="518" font-size="15" fill="#71717a">handshake</text>
+</g>
+<text x="600" y="625" text-anchor="middle" font-size="18" fill="#71717a">starring Pam 👩‍💻 · Jim 🖥️ · and a sneaky hacker 🕵️</text>
+</svg>
